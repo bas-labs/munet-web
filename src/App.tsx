@@ -27,6 +27,7 @@ const RentaEspaciosPage = lazy(() => import('@/pages/RentaEspaciosPage'))
 const InvolucratePage = lazy(() => import('@/pages/InvolucratePage'))
 const ContactoPage = lazy(() => import('@/pages/ContactoPage'))
 const AvisoPrivacidadPage = lazy(() => import('@/pages/AvisoPrivacidadPage'))
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
 // Checkout flow
 const OrderLookupPage = lazy(() => import('@/pages/OrderLookupPage'))
@@ -97,6 +98,9 @@ function AnimatedRoutes() {
         <Route path="/involucrate" element={<InvolucratePage />} />
         <Route path="/contacto" element={<ContactoPage />} />
         <Route path="/aviso-de-privacidad" element={<AvisoPrivacidadPage />} />
+        
+        {/* 404 Catch-all */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AnimatePresence>
   )
