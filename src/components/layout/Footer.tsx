@@ -68,6 +68,17 @@ export default function Footer() {
       aria-label="Pie de página del sitio"
     >
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        {/* Logo */}
+        <div className="mb-10">
+          <Link to="/" aria-label="MUNET - Ir a inicio">
+            <img 
+              src="/images/logo_verde.png" 
+              alt="MUNET" 
+              className="h-12 w-auto"
+            />
+          </Link>
+        </div>
+        
         {/* Main Footer Content */}
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:gap-12">
           {/* Column 1: Visita */}

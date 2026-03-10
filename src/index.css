@@ -34,11 +34,13 @@
   --font-body: "Inter Variable", "Inter", system-ui, sans-serif;
   --font-sans: var(--font-body);
 
-  /* MUNET Brand Colors */
+  /* MUNET Brand Colors - Official Green Palette */
   --color-munet-primary: #1A1A1A;
   --color-munet-secondary: #F5F5F5;
-  --color-munet-accent: #FF6B35;
-  --color-munet-accent-alt: #00D4AA;
+  --color-munet-green: #8DC63F;
+  --color-munet-green-hover: #7BBF35;
+  --color-munet-green-dark: #43A047;
+  --color-munet-green-accent: #4CAF50;
 
   /* Border Radius - PRD Specifications */
   --radius-sm: 4px;
@@ -78,13 +80,13 @@
   --muted: #F5F5F5;
   --muted-foreground: #6B7280;
 
-  /* Accent colors - MUNET Energy Orange */
-  --accent: #FF6B35;
+  /* Accent colors - MUNET Green */
+  --accent: #8DC63F;
   --accent-foreground: #FFFFFF;
 
-  /* Accent Alt - MUNET Sustainability Teal */
-  --accent-alt: #00D4AA;
-  --accent-alt-foreground: #1A1A1A;
+  /* Accent Alt - MUNET Green Dark */
+  --accent-alt: #43A047;
+  --accent-alt-foreground: #FFFFFF;
 
   /* Destructive/error states */
   --destructive: #EF4444;
@@ -93,7 +95,7 @@
   /* Borders and inputs */
   --border: #E5E7EB;
   --input: #E5E7EB;
-  --ring: #FF6B35;
+  --ring: #8DC63F;
 
   /* Base radius */
   --radius: 8px;
@@ -106,7 +108,7 @@
   --sidebar-accent: #F5F5F5;
   --sidebar-accent-foreground: #1A1A1A;
   --sidebar-border: #E5E7EB;
-  --sidebar-ring: #FF6B35;
+  --sidebar-ring: #8DC63F;
 }
 
 /* =============================================================================
@@ -132,27 +134,27 @@
   --muted: #262626;
   --muted-foreground: #A1A1AA;
 
-  --accent: #FF6B35;
+  --accent: #8DC63F;
   --accent-foreground: #FFFFFF;
 
-  --accent-alt: #00D4AA;
-  --accent-alt-foreground: #0A0A0A;
+  --accent-alt: #4CAF50;
+  --accent-alt-foreground: #FFFFFF;
 
   --destructive: #DC2626;
   --destructive-foreground: #FFFFFF;
 
   --border: #262626;
   --input: #262626;
-  --ring: #FF6B35;
+  --ring: #8DC63F;
 
   --sidebar: #171717;
   --sidebar-foreground: #FAFAFA;
-  --sidebar-primary: #FAFAFA;
-  --sidebar-primary-foreground: #171717;
+  --sidebar-primary: #8DC63F;
+  --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #262626;
   --sidebar-accent-foreground: #FAFAFA;
   --sidebar-border: #262626;
-  --sidebar-ring: #FF6B35;
+  --sidebar-ring: #8DC63F;
 }
 
 /* =============================================================================

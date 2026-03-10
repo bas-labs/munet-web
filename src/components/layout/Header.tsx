@@ -98,7 +98,11 @@ export default function Header() {
           className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           aria-label="MUNET - Ir a inicio"
         >
-          <span className="text-xl font-bold tracking-tight">MUNET</span>
+          <img 
+            src="/images/logo_verde.png" 
+            alt="MUNET - Museo Nacional de Energía y Tecnología" 
+            className="h-10 w-auto"
+          />
         </Link>
 
         {/* Desktop Navigation */}
