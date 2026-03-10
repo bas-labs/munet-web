@@ -25,7 +25,7 @@ const upcomingActivities: Activity[] = [
     date: '15 Mar 2026',
     time: '11:00 hrs',
     category: 'Taller',
-    categoryColor: '#FF6B35',
+    categoryColor: '#8DC63F',
     spots: 8,
     featured: true,
   },
@@ -35,7 +35,7 @@ const upcomingActivities: Activity[] = [
     date: '18 Mar 2026',
     time: '17:00 hrs',
     category: 'Conferencia',
-    categoryColor: '#00D4AA',
+    categoryColor: '#6BB52A',
   },
   {
     id: '3',
@@ -52,7 +52,7 @@ const upcomingActivities: Activity[] = [
     date: '25 Mar 2026',
     time: '10:00 hrs',
     category: 'Taller',
-    categoryColor: '#FF6B35',
+    categoryColor: '#8DC63F',
     spots: 15,
     featured: true,
   },
@@ -134,22 +134,22 @@ export default function ActividadesHighlight() {
   return (
     <section ref={sectionRef} className="py-24 lg:py-32 bg-[#0a0a0a] relative overflow-hidden">
       {/* Background energy effects */}
-      <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-[#FF6B35]/5 rounded-full blur-[150px]" />
-      <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-[#00D4AA]/5 rounded-full blur-[120px]" />
+      <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-[#8DC63F]/5 rounded-full blur-[150px]" />
+      <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-[#6BB52A]/5 rounded-full blur-[120px]" />
 
       <div className="container mx-auto px-4 relative">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
           <div>
             <div className="flex items-center gap-4 mb-6">
-              <span className="inline-block bg-[#FF6B35]/15 text-[#FF6B35] text-label px-4 py-2 rounded-full">
+              <span className="inline-block bg-[#8DC63F]/15 text-[#8DC63F] text-label px-4 py-2 rounded-full">
                 Agenda Cultural
               </span>
-              <div className="flex-1 h-px bg-gradient-to-r from-[#FF6B35]/30 to-transparent" />
+              <div className="flex-1 h-px bg-gradient-to-r from-[#8DC63F]/30 to-transparent" />
             </div>
             <h2 className="text-display-lg text-white">
               Próximas<br />
-              <span className="bg-gradient-to-r from-[#FF6B35] to-[#00D4AA] bg-clip-text text-transparent">Actividades</span>
+              <span className="bg-gradient-to-r from-[#8DC63F] to-[#6BB52A] bg-clip-text text-transparent">Actividades</span>
             </h2>
           </div>
           <MagneticWrap>
@@ -157,7 +157,7 @@ export default function ActividadesHighlight() {
               asChild
               variant="outline"
               size="lg"
-              className="border-white/15 text-white hover:bg-white/10 hover:border-[#FF6B35]/40 px-8 rounded-xl"
+              className="border-white/15 text-white hover:bg-white/10 hover:border-[#8DC63F]/40 px-8 rounded-xl"
             >
               <Link to="/actividades" className="flex items-center gap-2">
                 Ver Calendario Completo
@@ -202,30 +202,30 @@ export default function ActividadesHighlight() {
                       </span>
 
                       {/* Title */}
-                      <h3 className={`font-display font-bold text-white mb-auto group-hover:text-[#FF6B35] transition-colors duration-300 ${i === 0 ? 'text-3xl lg:text-4xl' : 'text-xl lg:text-2xl'}`}>
+                      <h3 className={`font-display font-bold text-white mb-auto group-hover:text-[#8DC63F] transition-colors duration-300 ${i === 0 ? 'text-3xl lg:text-4xl' : 'text-xl lg:text-2xl'}`}>
                         {activity.title}
                       </h3>
 
                       {/* Meta */}
                       <div className="mt-6 space-y-2 text-sm text-white/50">
                         <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-[#FF6B35]" />
+                          <Calendar className="h-4 w-4 text-[#8DC63F]" />
                           {activity.date}
                         </div>
                         <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4 text-[#FF6B35]" />
+                          <Clock className="h-4 w-4 text-[#8DC63F]" />
                           {activity.time}
                         </div>
                         {activity.spots && (
                           <div className="flex items-center gap-2">
-                            <Users className="h-4 w-4 text-[#00D4AA]" />
-                            <span className="text-[#00D4AA] font-medium">{activity.spots} lugares</span>
+                            <Users className="h-4 w-4 text-[#6BB52A]" />
+                            <span className="text-[#6BB52A] font-medium">{activity.spots} lugares</span>
                           </div>
                         )}
                       </div>
 
                       {/* Arrow */}
-                      <div className="mt-4 pt-4 border-t border-white/8 flex items-center gap-2 text-[#FF6B35] text-sm font-medium opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-400">
+                      <div className="mt-4 pt-4 border-t border-white/8 flex items-center gap-2 text-[#8DC63F] text-sm font-medium opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-400">
                         Ver detalles
                         <ArrowRight className="h-4 w-4" />
                       </div>

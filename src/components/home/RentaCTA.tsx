@@ -83,7 +83,7 @@ export default function RentaCTA() {
           {/* Badge */}
           <div className="flex items-center gap-4 mb-8">
             <span className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm border border-white/10 text-white/80 text-sm font-bold px-5 py-2.5 rounded-full">
-              <Sparkles className="h-4 w-4 text-[#FF6B35]" />
+              <Sparkles className="h-4 w-4 text-[#8DC63F]" />
               Espacios Únicos
             </span>
             <div className="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent" />
@@ -94,7 +94,7 @@ export default function RentaCTA() {
             <div className="lg:col-span-8">
               <h2 className="font-display font-black text-white text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-[-0.03em]">
                 Haz de tu Evento algo{' '}
-                <span className="bg-gradient-to-r from-[#FF6B35] to-[#00D4AA] bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#8DC63F] to-[#6BB52A] bg-clip-text text-transparent">
                   Extraordinario
                 </span>
               </h2>
@@ -127,8 +127,8 @@ export default function RentaCTA() {
               { icon: Sparkles, label: 'Eventos/Año', value: 150 },
             ].map((space) => (
               <div key={space.label} className="renta-feature text-center p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors duration-500">
-                <div className="h-12 w-12 bg-gradient-to-br from-[#FF6B35]/20 to-[#00D4AA]/20 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <space.icon className="h-6 w-6 text-[#FF6B35]" />
+                <div className="h-12 w-12 bg-gradient-to-br from-[#8DC63F]/20 to-[#6BB52A]/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <space.icon className="h-6 w-6 text-[#8DC63F]" />
                 </div>
                 <div className="font-display font-black text-3xl md:text-4xl text-white mb-1">
                   <AnimatedCounter end={space.value} suffix={space.label === 'Auditorio' ? ' pax' : space.label === 'Eventos/Año' ? '+' : ''} />

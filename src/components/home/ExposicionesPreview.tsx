@@ -13,7 +13,7 @@ const exhibitions = [
     description: 'El flujo de electrones, circuitos y la generación eléctrica que ilumina nuestro mundo.',
     icon: Zap,
     gradient: 'from-amber-400 to-orange-600',
-    accent: '#FF6B35',
+    accent: '#8DC63F',
     level: 1,
     number: '01',
   },
@@ -32,8 +32,8 @@ const exhibitions = [
     title: 'Energía Nuclear',
     description: 'Fusión, fisión y el futuro de la energía limpia que transformará nuestra civilización.',
     icon: Atom,
-    gradient: 'from-[#00D4AA] to-teal-700',
-    accent: '#00D4AA',
+    gradient: 'from-[#6BB52A] to-teal-700',
+    accent: '#6BB52A',
     level: 1,
     number: '03',
   },
@@ -71,61 +71,38 @@ const exhibitions = [
 
 export default function ExposicionesPreview() {
   const sectionRef = useRef<HTMLElement>(null)
-  const trackRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      const track = trackRef.current
-      if (!track) return
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReduced) return
 
-      // Section header clip reveal
+    const ctx = gsap.context(() => {
+      // Header fade-up
       gsap.from(headerRef.current, {
-        clipPath: 'inset(100% 0 0 0)',
-        duration: 1,
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
         ease: 'power3.out',
         scrollTrigger: {
           trigger: headerRef.current,
-          start: 'top 85%',
+          start: 'top 90%',
           once: true,
         },
       })
 
-      // Horizontal scroll
-      const cards = track.querySelectorAll('.expo-card')
-      const totalScroll = track.scrollWidth - window.innerWidth
-
-      gsap.to(track, {
-        x: -totalScroll,
-        ease: 'none',
+      // Cards stagger in
+      gsap.from('.expo-card', {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power3.out',
         scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: () => `+=${totalScroll}`,
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
+          trigger: '.expo-track',
+          start: 'top 85%',
+          once: true,
         },
-      })
-
-      // Each card staggers in as it enters viewport
-      cards.forEach((card) => {
-        gsap.from(card, {
-          opacity: 0,
-          scale: 0.85,
-          rotateY: -15,
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: card,
-            containerAnimation: gsap.getById?.('hscroll') || undefined,
-            start: 'left 80%',
-            once: true,
-            // Use the section scroll instead
-            scroller: undefined,
-          },
-        })
       })
     }, sectionRef)
 
@@ -133,103 +110,104 @@ export default function ExposicionesPreview() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative bg-white overflow-hidden">
-      {/* Header — sits above the pinned area */}
-      <div className="pt-24 lg:pt-32 pb-12 container mx-auto px-4">
+    <section ref={sectionRef} className="relative bg-white py-20 lg:py-28">
+      {/* Header */}
+      <div className="container mx-auto px-4 mb-12">
         <div ref={headerRef}>
           <div className="flex items-center gap-4 mb-6">
-            <span className="inline-block bg-[#FF6B35]/10 text-[#FF6B35] text-label px-4 py-2 rounded-full">
+            <span className="inline-block bg-[#8DC63F]/10 text-[#8DC63F] text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full">
               Exposiciones
             </span>
-            <div className="flex-1 h-px bg-gradient-to-r from-[#FF6B35]/30 to-transparent" />
+            <div className="flex-1 h-px bg-gradient-to-r from-[#8DC63F]/30 to-transparent" />
           </div>
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <h2 className="text-display-lg text-foreground">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
               Camina por el Universo<br />
-              de la <span className="text-gradient-energy">Energía</span>
+              de la <span className="text-[#8DC63F]">Energía</span>
             </h2>
-            <p className="text-body-lg text-muted-foreground max-w-md">
-              Desliza horizontalmente para recorrer nuestras 11 salas interactivas, distribuidas en 2 niveles.
+            <p className="text-base text-muted-foreground max-w-md">
+              Recorre nuestras 11 salas interactivas, distribuidas en 2 niveles.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Horizontal scroll track */}
-      <div className="h-screen flex items-center">
-        <div ref={trackRef} className="flex gap-8 pl-8 pr-[30vw] items-stretch" style={{ willChange: 'transform' }}>
-          {exhibitions.map((expo) => {
-            const Icon = expo.icon
-            return (
-              <Link
-                key={expo.id}
-                to={`/exposiciones#${expo.id}`}
-                className="expo-card group block shrink-0 w-[80vw] sm:w-[50vw] lg:w-[35vw] relative"
-              >
-                <div
-                  className="relative h-[65vh] rounded-3xl overflow-hidden border border-neutral-200/60 bg-white transition-all duration-500 hover:shadow-2xl hover:shadow-black/10 hover:border-transparent"
-                  style={{ perspective: '1200px' }}
-                >
-                  {/* Background gradient */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${expo.gradient} opacity-[0.07] group-hover:opacity-[0.15] transition-opacity duration-700`} />
+      {/* Horizontal scrolling cards — native CSS scroll, no ScrollTrigger pin */}
+      <div className="expo-track flex gap-6 overflow-x-auto px-4 pb-6 snap-x snap-mandatory scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
+        {/* Left spacer for container alignment */}
+        <div className="shrink-0 w-[max(0px,calc((100vw-1280px)/2+0.5rem))]" />
 
-                  {/* Number watermark */}
-                  <div className="absolute top-6 right-8 font-display font-black text-[8rem] leading-none text-neutral-100 group-hover:text-neutral-200/80 transition-colors duration-500 select-none">
-                    {expo.number}
-                  </div>
+        {exhibitions.map((expo) => {
+          const Icon = expo.icon
+          return (
+            <Link
+              key={expo.id}
+              to={`/exposiciones#${expo.id}`}
+              className="expo-card group block shrink-0 w-[80vw] sm:w-[45vw] lg:w-[30vw] snap-start"
+            >
+              <div className="relative h-[420px] lg:h-[480px] rounded-2xl overflow-hidden border border-neutral-200/60 bg-white transition-all duration-500 hover:shadow-xl hover:shadow-black/5 hover:border-transparent">
+                {/* Background gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${expo.gradient} opacity-[0.06] group-hover:opacity-[0.12] transition-opacity duration-500`} />
 
-                  {/* Content */}
-                  <div className="relative z-10 flex flex-col h-full p-8 lg:p-10">
-                    {/* Icon */}
-                    <div
-                      className={`inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${expo.gradient} shadow-lg mb-auto`}
-                    >
-                      <Icon className="h-8 w-8 text-white" />
-                    </div>
+                {/* Number watermark */}
+                <div className="absolute top-4 right-6 font-display font-black text-[6rem] leading-none text-neutral-100 group-hover:text-neutral-200/80 transition-colors duration-500 select-none">
+                  {expo.number}
+                </div>
 
-                    {/* Level badge */}
-                    <span className="inline-block self-start text-label-sm text-muted-foreground bg-neutral-100 px-3 py-1.5 rounded-full mb-4 mt-8">
-                      Nivel {expo.level}
-                    </span>
-
-                    <h3 className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-3 group-hover:translate-x-2 transition-transform duration-500">
-                      {expo.title}
-                    </h3>
-
-                    <p className="text-body-md text-muted-foreground mb-6 max-w-sm">
-                      {expo.description}
-                    </p>
-
-                    {/* Explore link */}
-                    <div className="flex items-center gap-2 text-[#FF6B35] font-semibold text-sm mt-auto opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                      Explorar sala
-                      <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
-
-                  {/* Bottom accent line */}
+                {/* Content */}
+                <div className="relative z-10 flex flex-col h-full p-7 lg:p-8">
+                  {/* Icon */}
                   <div
-                    className="absolute bottom-0 left-0 right-0 h-1 scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left"
-                    style={{ backgroundColor: expo.accent }}
-                  />
-                </div>
-              </Link>
-            )
-          })}
+                    className={`inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${expo.gradient} shadow-lg mb-auto`}
+                  >
+                    <Icon className="h-7 w-7 text-white" />
+                  </div>
 
-          {/* Final CTA card */}
-          <Link to="/exposiciones" className="expo-card group block shrink-0 w-[80vw] sm:w-[50vw] lg:w-[35vw]">
-            <div className="relative h-[65vh] rounded-3xl overflow-hidden border-2 border-dashed border-[#FF6B35]/30 bg-gradient-to-br from-[#FF6B35]/5 to-[#00D4AA]/5 flex items-center justify-center hover:border-[#FF6B35]/60 transition-all duration-500">
-              <div className="text-center px-8">
-                <div className="w-20 h-20 bg-[#FF6B35]/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-[#FF6B35]/20 transition-colors">
-                  <ArrowRight className="h-8 w-8 text-[#FF6B35] group-hover:translate-x-1 transition-transform" />
+                  {/* Level badge */}
+                  <span className="inline-block self-start text-[11px] font-medium uppercase tracking-wider text-muted-foreground bg-neutral-100 px-3 py-1 rounded-full mb-3 mt-6">
+                    Nivel {expo.level}
+                  </span>
+
+                  <h3 className="font-display text-2xl lg:text-3xl font-bold text-foreground mb-2 group-hover:translate-x-1 transition-transform duration-400">
+                    {expo.title}
+                  </h3>
+
+                  <p className="text-sm text-muted-foreground mb-5 max-w-sm leading-relaxed">
+                    {expo.description}
+                  </p>
+
+                  {/* Explore link */}
+                  <div className="flex items-center gap-2 text-[#8DC63F] font-semibold text-sm mt-auto opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-400">
+                    Explorar sala
+                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
-                <p className="font-display text-2xl font-bold text-foreground mb-2">Ver las 11 exposiciones</p>
-                <p className="text-muted-foreground">Descubre todo lo que MUNET tiene para ti</p>
+
+                {/* Bottom accent line */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
+                  style={{ backgroundColor: expo.accent }}
+                />
               </div>
+            </Link>
+          )
+        })}
+
+        {/* Final CTA card */}
+        <Link to="/exposiciones" className="expo-card group block shrink-0 w-[80vw] sm:w-[45vw] lg:w-[30vw] snap-start">
+          <div className="relative h-[420px] lg:h-[480px] rounded-2xl overflow-hidden border-2 border-dashed border-[#8DC63F]/25 bg-gradient-to-br from-[#8DC63F]/[0.03] to-[#6BB52A]/[0.03] flex items-center justify-center hover:border-[#8DC63F]/50 transition-all duration-500">
+            <div className="text-center px-8">
+              <div className="w-16 h-16 bg-[#8DC63F]/10 rounded-full flex items-center justify-center mx-auto mb-5 group-hover:bg-[#8DC63F]/15 transition-colors">
+                <ArrowRight className="h-6 w-6 text-[#8DC63F] group-hover:translate-x-1 transition-transform" />
+              </div>
+              <p className="font-display text-xl font-bold text-foreground mb-1">Ver las 11 exposiciones</p>
+              <p className="text-sm text-muted-foreground">Descubre todo lo que MUNET tiene para ti</p>
             </div>
-          </Link>
-        </div>
+          </div>
+        </Link>
+
+        {/* Right spacer */}
+        <div className="shrink-0 w-4" />
       </div>
     </section>
   )
