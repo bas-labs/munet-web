@@ -1,134 +1,418 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+
+/* MUNET Fonts - Google Fonts via npm */
+@import "@fontsource-variable/dm-sans";
+@import "@fontsource-variable/inter";
 
 @custom-variant dark (&:is(.dark *));
 
+/* =============================================================================
+   MUNET Design System - Design Tokens
+   Based on PRD Section 6.1
+============================================================================= */
+
 @theme {
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
+  /* Typography - Font Families */
+  --font-display: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
+  --font-body: "Inter Variable", "Inter", system-ui, sans-serif;
+  --font-sans: var(--font-body);
+
+  /* MUNET Brand Colors */
+  --color-munet-primary: #1A1A1A;
+  --color-munet-secondary: #F5F5F5;
+  --color-munet-accent: #FF6B35;
+  --color-munet-accent-alt: #00D4AA;
+
+  /* Border Radius - PRD Specifications */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 9999px;
 }
+
+/* =============================================================================
+   CSS Custom Properties - Light Theme (Default)
+============================================================================= */
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.58 0.22 27);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.809 0.105 251.813);
-  --chart-2: oklch(0.623 0.214 259.815);
-  --chart-3: oklch(0.546 0.245 262.881);
-  --chart-4: oklch(0.488 0.243 264.376);
-  --chart-5: oklch(0.424 0.199 265.638);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Core semantic colors using MUNET palette */
+  --background: #FFFFFF;
+  --foreground: #1A1A1A;
+
+  /* Card surfaces */
+  --card: #FFFFFF;
+  --card-foreground: #1A1A1A;
+
+  /* Popover/dropdown surfaces */
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A1A;
+
+  /* Primary action color - MUNET Primary (dark) */
+  --primary: #1A1A1A;
+  --primary-foreground: #FFFFFF;
+
+  /* Secondary action color */
+  --secondary: #F5F5F5;
+  --secondary-foreground: #1A1A1A;
+
+  /* Muted/subdued elements */
+  --muted: #F5F5F5;
+  --muted-foreground: #6B7280;
+
+  /* Accent colors - MUNET Energy Orange */
+  --accent: #FF6B35;
+  --accent-foreground: #FFFFFF;
+
+  /* Accent Alt - MUNET Sustainability Teal */
+  --accent-alt: #00D4AA;
+  --accent-alt-foreground: #1A1A1A;
+
+  /* Destructive/error states */
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+
+  /* Borders and inputs */
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+  --ring: #FF6B35;
+
+  /* Base radius */
+  --radius: 8px;
+
+  /* Sidebar (keeping for shadcn compatibility) */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1A1A1A;
+  --sidebar-primary: #1A1A1A;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F5F5F5;
+  --sidebar-accent-foreground: #1A1A1A;
+  --sidebar-border: #E5E7EB;
+  --sidebar-ring: #FF6B35;
 }
+
+/* =============================================================================
+   Dark Theme
+============================================================================= */
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.87 0.00 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.371 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.809 0.105 251.813);
-  --chart-2: oklch(0.623 0.214 259.815);
-  --chart-3: oklch(0.546 0.245 262.881);
-  --chart-4: oklch(0.488 0.243 264.376);
-  --chart-5: oklch(0.424 0.199 265.638);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #0A0A0A;
+  --foreground: #FAFAFA;
+
+  --card: #171717;
+  --card-foreground: #FAFAFA;
+
+  --popover: #171717;
+  --popover-foreground: #FAFAFA;
+
+  --primary: #FAFAFA;
+  --primary-foreground: #171717;
+
+  --secondary: #262626;
+  --secondary-foreground: #FAFAFA;
+
+  --muted: #262626;
+  --muted-foreground: #A1A1AA;
+
+  --accent: #FF6B35;
+  --accent-foreground: #FFFFFF;
+
+  --accent-alt: #00D4AA;
+  --accent-alt-foreground: #0A0A0A;
+
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+
+  --border: #262626;
+  --input: #262626;
+  --ring: #FF6B35;
+
+  --sidebar: #171717;
+  --sidebar-foreground: #FAFAFA;
+  --sidebar-primary: #FAFAFA;
+  --sidebar-primary-foreground: #171717;
+  --sidebar-accent: #262626;
+  --sidebar-accent-foreground: #FAFAFA;
+  --sidebar-border: #262626;
+  --sidebar-ring: #FF6B35;
 }
 
+/* =============================================================================
+   Theme Inline - Map CSS vars to Tailwind
+============================================================================= */
+
 @theme inline {
-  --font-sans: 'Geist Variable', sans-serif;
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --color-foreground: var(--foreground);
+  /* Font families */
+  --font-display: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
+  --font-body: "Inter Variable", "Inter", system-ui, sans-serif;
+  --font-sans: var(--font-body);
+
+  /* Core colors */
   --color-background: var(--background);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-accent-alt: var(--accent-alt);
+  --color-accent-alt-foreground: var(--accent-alt-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Sidebar colors */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 }
+
+/* =============================================================================
+   Typography System
+   Based on PRD Section 6 - Scientific & Premium feel
+============================================================================= */
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    @apply font-body antialiased;
+    font-feature-settings: "cv11", "ss01";
+    font-variation-settings: "opsz" 32;
+  }
+
   body {
     @apply bg-background text-foreground;
+    @apply text-base leading-relaxed;
   }
-  html {
-    @apply font-sans;
+
+  /* Headings - DM Sans Display Font */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-semibold tracking-tight text-foreground;
+  }
+
+  h1 {
+    @apply text-4xl leading-tight;
+    @apply md:text-5xl;
+    @apply lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl leading-tight;
+    @apply md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl leading-snug;
+    @apply md:text-3xl;
+  }
+
+  h4 {
+    @apply text-xl leading-snug;
+    @apply md:text-2xl;
+  }
+
+  h5 {
+    @apply text-lg leading-snug;
+    @apply md:text-xl;
+  }
+
+  h6 {
+    @apply text-base leading-snug font-semibold;
+    @apply md:text-lg;
+  }
+
+  /* Body text */
+  p {
+    @apply text-base leading-relaxed;
+    @apply md:text-lg md:leading-relaxed;
+  }
+
+  /* Small text */
+  small {
+    @apply text-sm leading-normal text-muted-foreground;
+  }
+
+  /* Links */
+  a {
+    @apply text-accent underline-offset-4 transition-colors;
+    @apply hover:text-accent/80;
+  }
+
+  /* Lists */
+  ul, ol {
+    @apply pl-6 space-y-2;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  /* Blockquote - for MUNET's museum quotes */
+  blockquote {
+    @apply border-l-4 border-accent pl-6 italic;
+    @apply text-lg md:text-xl;
+    @apply text-muted-foreground;
+  }
+
+  /* Code */
+  code {
+    @apply rounded-md bg-muted px-1.5 py-0.5 font-mono text-sm;
+  }
+
+  pre {
+    @apply rounded-lg bg-muted p-4 overflow-x-auto;
+  }
+
+  pre code {
+    @apply bg-transparent p-0;
+  }
+
+  /* Focus styles */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+/* =============================================================================
+   Typography Utility Classes
+============================================================================= */
+
+@layer utilities {
+  /* Display headings - Hero sections */
+  .text-display-xl {
+    @apply font-display text-5xl font-bold tracking-tight leading-none;
+    @apply md:text-6xl;
+    @apply lg:text-7xl;
+  }
+
+  .text-display-lg {
+    @apply font-display text-4xl font-bold tracking-tight leading-tight;
+    @apply md:text-5xl;
+    @apply lg:text-6xl;
+  }
+
+  .text-display-md {
+    @apply font-display text-3xl font-semibold tracking-tight leading-tight;
+    @apply md:text-4xl;
+  }
+
+  .text-display-sm {
+    @apply font-display text-2xl font-semibold tracking-tight leading-snug;
+    @apply md:text-3xl;
+  }
+
+  /* Body text sizes */
+  .text-body-lg {
+    @apply font-body text-lg leading-relaxed;
+    @apply md:text-xl;
+  }
+
+  .text-body-md {
+    @apply font-body text-base leading-relaxed;
+    @apply md:text-lg;
+  }
+
+  .text-body-sm {
+    @apply font-body text-sm leading-normal;
+  }
+
+  .text-body-xs {
+    @apply font-body text-xs leading-normal;
+  }
+
+  /* Label text */
+  .text-label {
+    @apply font-body text-sm font-medium uppercase tracking-wider;
+  }
+
+  .text-label-sm {
+    @apply font-body text-xs font-medium uppercase tracking-wider;
+  }
+
+  /* Caption text */
+  .text-caption {
+    @apply font-body text-sm text-muted-foreground;
+  }
+
+  /* Accent text colors */
+  .text-energy {
+    @apply text-accent;
+  }
+
+  .text-sustainability {
+    @apply text-accent-alt;
+  }
+
+  /* Gradient text - for hero sections */
+  .text-gradient-energy {
+    @apply bg-gradient-to-r from-accent to-accent-alt bg-clip-text text-transparent;
+  }
+}
+
+/* =============================================================================
+   Component Utility Classes
+============================================================================= */
+
+@layer utilities {
+  /* Glass effect for cards */
+  .glass {
+    @apply bg-background/80 backdrop-blur-lg;
+  }
+
+  /* Energy glow effect */
+  .glow-accent {
+    box-shadow: 0 0 20px theme(colors.accent / 0.3);
+  }
+
+  .glow-accent-alt {
+    box-shadow: 0 0 20px theme(colors.accent-alt / 0.3);
+  }
+
+  /* Smooth scroll */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+
+  /* Hide scrollbar but allow scrolling */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }

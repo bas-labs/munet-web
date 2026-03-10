@@ -1,13 +1,30 @@
-import { Button } from '@/components/ui/button'
+import HeroSection from '@/components/home/HeroSection'
+import ExposicionesPreview from '@/components/home/ExposicionesPreview'
+import PlanificaSection from '@/components/home/PlanificaSection'
+import ActividadesHighlight from '@/components/home/ActividadesHighlight'
+import RentaCTA from '@/components/home/RentaCTA'
+import NewsletterSection from '@/components/home/NewsletterSection'
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background">
-      <h1 className="text-4xl font-bold mb-4">MUNET</h1>
-      <p className="text-muted-foreground mb-8">
-        Museo Nacional de Energía y Tecnología
-      </p>
-      <Button>Comprar Boletos</Button>
-    </div>
+    <main className="min-h-screen">
+      {/* Hero: Full-viewport video background with quote and CTAs */}
+      <HeroSection />
+      
+      {/* Exposiciones: Bento grid preview of exhibition areas */}
+      <ExposicionesPreview />
+      
+      {/* Planifica: Hours, address, and map placeholder */}
+      <PlanificaSection />
+      
+      {/* Actividades: Horizontal scroll of upcoming events */}
+      <ActividadesHighlight />
+      
+      {/* Renta: Full-bleed CTA for venue rental */}
+      <RentaCTA />
+      
+      {/* Newsletter: Email subscription */}
+      <NewsletterSection />
+    </main>
   )
 }
