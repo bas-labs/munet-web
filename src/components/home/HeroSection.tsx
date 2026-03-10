@@ -1,212 +1,233 @@
 import { Link } from 'react-router-dom'
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
-import { useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Ticket, Compass } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { MapPin, Ticket, Compass } from 'lucide-react'
+import EnergyCanvas from './EnergyCanvas'
 
-export default function HeroSection() {
-  const containerRef = useRef<HTMLElement>(null)
-  const shouldReduceMotion = useReducedMotion()
+gsap.registerPlugin(ScrollTrigger)
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end start'],
-  })
+/* ─── Magnetic Button ─── */
+function MagneticButton({ children }: { children: React.ReactNode }) {
+  const btnRef = useRef<HTMLDivElement>(null)
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
-  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    const el = btnRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const x = e.clientX - rect.left - rect.width / 2
+    const y = e.clientY - rect.top - rect.height / 2
+    gsap.to(el, { x: x * 0.35, y: y * 0.35, duration: 0.3, ease: 'power2.out' })
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    if (btnRef.current) gsap.to(btnRef.current, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' })
+  }, [])
 
   return (
-    <section
-      ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-    >
-      {/* Background with Mexican-inspired gradient */}
-      <motion.div
-        className="absolute inset-0"
-        style={shouldReduceMotion ? {} : { y: backgroundY }}
-      >
-        {/* Deep forest green base - evokes Chapultepec */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1f0a] via-[#122912] to-[#0d1f0d]" />
-        
-        {/* Energy glow overlays */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#8DC63F]/25 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-[#43A047]/15 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#4CAF50]/10 via-transparent to-transparent" />
-        
-        {/* Subtle noise texture */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          }}
-        />
-        
-        {/* Animated floating particles */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-[#8DC63F] rounded-full"
-              style={{
-                left: `${15 + i * 15}%`,
-                top: `${20 + (i % 3) * 25}%`,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                opacity: [0.2, 0.6, 0.2],
-                scale: [1, 1.5, 1],
-              }}
-              transition={{
-                duration: 3 + i * 0.5,
-                repeat: Infinity,
-                delay: i * 0.3,
-                ease: "easeInOut",
-              }}
-            />
-          ))}
-        </div>
-      </motion.div>
+    <div ref={btnRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} className="inline-block">
+      {children}
+    </div>
+  )
+}
+
+/* ─── Hero Section ─── */
+export default function HeroSection() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const textWrapRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Parallax content fade on scroll
+      gsap.to('.hero-content-wrap', {
+        yPercent: 25,
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      })
+
+      // Cinematic text reveal - each word clips in
+      const words = textWrapRef.current?.querySelectorAll('.hero-word')
+      if (words) {
+        gsap.set(words, { clipPath: 'inset(0 100% 0 0)', opacity: 1 })
+        gsap.to(words, {
+          clipPath: 'inset(0 0% 0 0)',
+          duration: 0.8,
+          stagger: 0.12,
+          ease: 'power4.inOut',
+          delay: 0.6,
+        })
+      }
+
+      // "TE TRANSFORMA" - special entrance with scale
+      gsap.from('.hero-transform', {
+        scale: 1.4,
+        opacity: 0,
+        duration: 1.2,
+        delay: 1.8,
+        ease: 'expo.out',
+      })
+
+      // Badge
+      gsap.from('.hero-badge', { y: 30, opacity: 0, duration: 0.8, delay: 0.2 })
+
+      // CTAs stagger in
+      gsap.from('.hero-cta', {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        delay: 2.2,
+        ease: 'power3.out',
+      })
+
+      // Bottom strip slides up
+      gsap.from('.hero-bottom', { y: 60, opacity: 0, duration: 1, delay: 2.6, ease: 'power2.out' })
+
+      // Energy pulse orbs
+      gsap.to('.energy-orb-1', {
+        scale: 1.3,
+        opacity: 0.4,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      })
+      gsap.to('.energy-orb-2', {
+        scale: 1.5,
+        opacity: 0.3,
+        duration: 4,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        delay: 1,
+      })
+    }, sectionRef)
+
+    return () => ctx.revert()
+  }, [])
+
+  return (
+    <section ref={sectionRef} className="relative h-[100vh] min-h-[700px] flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
+      {/* Energy particle canvas */}
+      <EnergyCanvas className="z-[1]" />
+
+      {/* Gradient orbs */}
+      <div className="energy-orb-1 absolute top-[10%] right-[5%] w-[600px] h-[600px] rounded-full bg-[#FF6B35]/8 blur-[120px] z-0" />
+      <div className="energy-orb-2 absolute bottom-[5%] left-[0%] w-[500px] h-[500px] rounded-full bg-[#00D4AA]/6 blur-[100px] z-0" />
+
+      {/* Vignette */}
+      <div className="absolute inset-0 z-[2] bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.7)_100%)]" />
 
       {/* Content */}
-      <motion.div
-        className="relative z-10 container mx-auto px-4 text-center"
-        style={shouldReduceMotion ? {} : { y: contentY, opacity }}
-      >
+      <div className="hero-content-wrap relative z-10 container mx-auto px-4 flex flex-col items-center">
         {/* Location badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-8"
-        >
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-5 py-2.5 text-sm font-medium text-white/90">
-            <MapPin className="h-4 w-4 text-[#8DC63F]" />
-            Bosque de Chapultepec, Ciudad de México
+        <div className="hero-badge mb-10">
+          <span className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-6 py-3 text-sm font-medium text-white/80">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#FF6B35] opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#FF6B35]" />
+            </span>
+            Bosque de Chapultepec, CDMX
           </span>
-        </motion.div>
+        </div>
 
-        {/* Logo */}
-        <motion.div
-          className="mb-10"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          <img 
-            src="/images/logo_bco.png" 
-            alt="MUNET - Museo Nacional de Energía y Tecnología" 
-            className="h-24 sm:h-32 md:h-40 w-auto mx-auto drop-shadow-2xl"
-          />
-        </motion.div>
-
-        {/* Quote */}
-        <motion.blockquote
-          className="max-w-3xl mx-auto mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          <p className="text-xl sm:text-2xl md:text-3xl font-light text-white/90 leading-relaxed tracking-tight">
-            "El conocimiento no te crea ni te destruye.{' '}
-            <motion.span
-              className="text-[#8DC63F] font-semibold"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-            >
-              Te transforma.
-            </motion.span>
-            "
-          </p>
-        </motion.blockquote>
+        {/* ENORMOUS headline */}
+        <div ref={textWrapRef} className="text-center mb-12 max-w-[95vw]">
+          <div className="mb-4">
+            <span className="hero-word inline-block font-display font-black text-white opacity-0 text-[clamp(2rem,8vw,7rem)] leading-[0.9] tracking-[-0.04em]">
+              EL&nbsp;
+            </span>
+            <span className="hero-word inline-block font-display font-black text-white opacity-0 text-[clamp(2rem,8vw,7rem)] leading-[0.9] tracking-[-0.04em]">
+              CONOCIMIENTO&nbsp;
+            </span>
+            <span className="hero-word inline-block font-display font-black text-white opacity-0 text-[clamp(2rem,8vw,7rem)] leading-[0.9] tracking-[-0.04em]">
+              NO&nbsp;
+            </span>
+          </div>
+          <div className="mb-4">
+            <span className="hero-word inline-block font-display font-black text-white/60 opacity-0 text-[clamp(2rem,8vw,7rem)] leading-[0.9] tracking-[-0.04em]">
+              TE&nbsp;
+            </span>
+            <span className="hero-word inline-block font-display font-black text-white/60 opacity-0 text-[clamp(2rem,8vw,7rem)] leading-[0.9] tracking-[-0.04em]">
+              CREA&nbsp;
+            </span>
+            <span className="hero-word inline-block font-display font-black text-white/60 opacity-0 text-[clamp(2rem,8vw,7rem)] leading-[0.9] tracking-[-0.04em]">
+              NI&nbsp;
+            </span>
+            <span className="hero-word inline-block font-display font-black text-white/60 opacity-0 text-[clamp(2rem,8vw,7rem)] leading-[0.9] tracking-[-0.04em]">
+              TE&nbsp;
+            </span>
+            <span className="hero-word inline-block font-display font-black text-white/60 opacity-0 text-[clamp(2rem,8vw,7rem)] leading-[0.9] tracking-[-0.04em]">
+              DESTRUYE.
+            </span>
+          </div>
+          <div className="hero-transform">
+            <span className="inline-block font-display font-black text-[clamp(2.5rem,10vw,9rem)] leading-[0.9] tracking-[-0.04em] bg-gradient-to-r from-[#FF6B35] via-[#FF8F6B] to-[#00D4AA] bg-clip-text text-transparent">
+              TE TRANSFORMA.
+            </span>
+          </div>
+        </div>
 
         {/* CTAs */}
-        <motion.div
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          <motion.div
-            whileHover={shouldReduceMotion ? {} : { scale: 1.05, y: -2 }}
-            whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
-          >
-            <Button
-              asChild
-              size="lg"
-              className="bg-[#8DC63F] hover:bg-[#7BBF35] text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-xl shadow-[#8DC63F]/30 hover:shadow-[#8DC63F]/50 transition-all duration-300"
-            >
-              <Link to="/boletos" className="flex items-center gap-2">
-                <Ticket className="h-5 w-5" />
-                Comprar Boletos
-              </Link>
-            </Button>
-          </motion.div>
-          <motion.div
-            whileHover={shouldReduceMotion ? {} : { scale: 1.05, y: -2 }}
-            whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
-          >
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="border-white/30 bg-white/5 backdrop-blur-sm text-white hover:bg-white/15 px-8 py-6 text-lg font-semibold rounded-xl transition-all duration-300"
-            >
-              <Link to="/exposiciones" className="flex items-center gap-2">
-                <Compass className="h-5 w-5" />
-                Explorar Exposiciones
-              </Link>
-            </Button>
-          </motion.div>
-        </motion.div>
+        <div className="flex flex-col sm:flex-row gap-5 items-center mb-16">
+          <MagneticButton>
+            <div className="hero-cta">
+              <Button
+                asChild
+                size="lg"
+                className="bg-[#FF6B35] hover:bg-[#e55a28] text-white px-10 py-7 text-lg font-bold rounded-2xl shadow-[0_0_40px_rgba(255,107,53,0.4)] hover:shadow-[0_0_60px_rgba(255,107,53,0.6)] transition-all duration-500"
+              >
+                <Link to="/boletos" className="flex items-center gap-3">
+                  <Ticket className="h-5 w-5" />
+                  Comprar Boletos
+                </Link>
+              </Button>
+            </div>
+          </MagneticButton>
+          <MagneticButton>
+            <div className="hero-cta">
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-white/15 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 hover:border-[#00D4AA]/40 px-10 py-7 text-lg font-bold rounded-2xl transition-all duration-500"
+              >
+                <Link to="/exposiciones" className="flex items-center gap-3">
+                  <Compass className="h-5 w-5" />
+                  Explorar
+                </Link>
+              </Button>
+            </div>
+          </MagneticButton>
+        </div>
 
-        {/* Stats */}
-        <motion.div
-          className="mt-20 grid grid-cols-3 gap-8 max-w-2xl mx-auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1 }}
-        >
-          {[
-            { value: '11', label: 'Exposiciones' },
-            { value: '2', label: 'Niveles' },
-            { value: '∞', label: 'Descubrimientos' },
-          ].map((stat, i) => (
-            <motion.div 
-              key={i} 
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 1 + i * 0.1 }}
-            >
-              <div className="text-3xl sm:text-4xl font-bold text-[#8DC63F]">{stat.value}</div>
-              <div className="text-sm text-white/60 mt-1">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </motion.div>
+        {/* Bottom stat strip */}
+        <div className="hero-bottom flex items-center gap-12 text-white/50 text-sm font-medium tracking-wider uppercase">
+          <span>11 Exposiciones</span>
+          <span className="w-px h-4 bg-white/20" />
+          <span>2 Niveles</span>
+          <span className="w-px h-4 bg-white/20" />
+          <span>Chapultepec, CDMX</span>
+        </div>
+      </div>
 
       {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-      >
-        <motion.div
-          className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <motion.div
-            className="w-1.5 h-2.5 bg-[#8DC63F] rounded-full"
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </motion.div>
-      </motion.div>
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
+        <div className="flex flex-col items-center gap-3">
+          <span className="text-white/30 text-xs tracking-[0.3em] uppercase">Scroll</span>
+          <div className="w-px h-12 bg-gradient-to-b from-[#FF6B35] to-transparent" />
+        </div>
+      </div>
+
+      {/* Dark-to-light transition gradient at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-20 pointer-events-none" />
     </section>
   )
 }

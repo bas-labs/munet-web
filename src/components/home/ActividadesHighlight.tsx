@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion } from 'framer-motion'
-import { Card, CardContent } from '@/components/ui/card'
+import { useEffect, useRef, useCallback } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Button } from '@/components/ui/button'
 import { Calendar, Clock, ArrowRight, Users } from 'lucide-react'
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface Activity {
   id: string
@@ -12,6 +15,7 @@ interface Activity {
   category: string
   categoryColor: string
   spots?: number
+  featured?: boolean
 }
 
 const upcomingActivities: Activity[] = [
@@ -21,8 +25,9 @@ const upcomingActivities: Activity[] = [
     date: '15 Mar 2026',
     time: '11:00 hrs',
     category: 'Taller',
-    categoryColor: 'bg-amber-500',
+    categoryColor: '#FF6B35',
     spots: 8,
+    featured: true,
   },
   {
     id: '2',
@@ -30,7 +35,7 @@ const upcomingActivities: Activity[] = [
     date: '18 Mar 2026',
     time: '17:00 hrs',
     category: 'Conferencia',
-    categoryColor: 'bg-blue-500',
+    categoryColor: '#00D4AA',
   },
   {
     id: '3',
@@ -38,7 +43,7 @@ const upcomingActivities: Activity[] = [
     date: '22 Mar 2026',
     time: '12:00 hrs',
     category: 'Visita Guiada',
-    categoryColor: 'bg-emerald-500',
+    categoryColor: '#22C55E',
     spots: 12,
   },
   {
@@ -47,168 +52,211 @@ const upcomingActivities: Activity[] = [
     date: '25 Mar 2026',
     time: '10:00 hrs',
     category: 'Taller',
-    categoryColor: 'bg-amber-500',
+    categoryColor: '#FF6B35',
     spots: 15,
+    featured: true,
   },
 ]
 
-export default function ActividadesHighlight() {
-  const shouldReduceMotion = useReducedMotion()
+/* ─── 3D Tilt Card ─── */
+function TiltCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    const el = cardRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    gsap.to(el, {
+      rotateY: x * 12,
+      rotateX: -y * 12,
+      duration: 0.4,
+      ease: 'power2.out',
+      transformPerspective: 800,
+    })
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    if (cardRef.current) {
+      gsap.to(cardRef.current, { rotateY: 0, rotateX: 0, duration: 0.6, ease: 'power2.out' })
+    }
+  }, [])
 
   return (
-    <section className="py-24 lg:py-32 bg-neutral-900 relative overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#8DC63F]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-[#43A047]/10 rounded-full blur-3xl" />
-      </div>
-      
+    <div
+      ref={cardRef}
+      className={className}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
+    >
+      {children}
+    </div>
+  )
+}
+
+export default function ActividadesHighlight() {
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Section wipe — clip-path reveal from bottom
+      gsap.from(sectionRef.current, {
+        clipPath: 'inset(100% 0 0 0)',
+        duration: 1.2,
+        ease: 'power3.inOut',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 90%',
+          once: true,
+        },
+      })
+
+      // Staggered card reveals
+      gsap.from('.activity-card', {
+        y: 80,
+        opacity: 0,
+        scale: 0.9,
+        duration: 0.8,
+        stagger: 0.12,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.activity-grid',
+          start: 'top 75%',
+          once: true,
+        },
+      })
+    }, sectionRef)
+    return () => ctx.revert()
+  }, [])
+
+  return (
+    <section ref={sectionRef} className="py-24 lg:py-32 bg-[#0a0a0a] relative overflow-hidden">
+      {/* Background energy effects */}
+      <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-[#FF6B35]/5 rounded-full blur-[150px]" />
+      <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-[#00D4AA]/5 rounded-full blur-[120px]" />
+
       <div className="container mx-auto px-4 relative">
-        {/* Section header */}
-        <motion.div
-          className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
           <div>
-            <span className="inline-block bg-[#8DC63F]/20 text-[#8DC63F] text-sm font-semibold px-4 py-2 rounded-full mb-4">
-              Agenda Cultural
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Próximas Actividades
+            <div className="flex items-center gap-4 mb-6">
+              <span className="inline-block bg-[#FF6B35]/15 text-[#FF6B35] text-label px-4 py-2 rounded-full">
+                Agenda Cultural
+              </span>
+              <div className="flex-1 h-px bg-gradient-to-r from-[#FF6B35]/30 to-transparent" />
+            </div>
+            <h2 className="text-display-lg text-white">
+              Próximas<br />
+              <span className="bg-gradient-to-r from-[#FF6B35] to-[#00D4AA] bg-clip-text text-transparent">Actividades</span>
             </h2>
-            <p className="text-lg text-neutral-400 max-w-xl">
-              Talleres, conferencias y experiencias diseñadas para todas las edades.
-            </p>
           </div>
-          <motion.div
-            whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
-            whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
-          >
+          <MagneticWrap>
             <Button
               asChild
               variant="outline"
               size="lg"
-              className="border-neutral-700 text-white hover:bg-neutral-800 hover:border-[#8DC63F]/50 shrink-0 px-6"
+              className="border-white/15 text-white hover:bg-white/10 hover:border-[#FF6B35]/40 px-8 rounded-xl"
             >
               <Link to="/actividades" className="flex items-center gap-2">
-                Ver Calendario
+                Ver Calendario Completo
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-          </motion.div>
-        </motion.div>
+          </MagneticWrap>
+        </div>
 
-        {/* Horizontal scroll cards */}
-        <div className="relative -mx-4 px-4">
-          <motion.div 
-            className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide"
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            {upcomingActivities.map((activity, index) => (
-              <motion.div
-                key={activity.id}
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 * index }}
-              >
-                <Link
-                  to={`/actividades/${activity.id}`}
-                  className="block shrink-0 w-[320px] md:w-[360px] snap-start"
-                >
-                  <motion.div
-                    whileHover={shouldReduceMotion ? {} : { y: -8, scale: 1.02 }}
-                    whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
-                    transition={{ duration: 0.25 }}
-                  >
-                    <Card className="h-full bg-neutral-800/80 backdrop-blur-sm border-neutral-700 hover:border-[#8DC63F]/50 transition-all duration-300 group overflow-hidden">
-                      {/* Top color bar */}
-                      <div className={`h-1.5 ${activity.categoryColor}`} />
-                      
-                      <CardContent className="p-6">
-                        {/* Category badge */}
-                        <span className={`inline-block text-xs font-semibold text-white ${activity.categoryColor} px-3 py-1.5 rounded-full mb-4`}>
-                          {activity.category}
-                        </span>
-                        
-                        {/* Title */}
-                        <h3 className="text-lg font-bold text-white mb-4 group-hover:text-[#8DC63F] transition-colors line-clamp-2 min-h-[56px]">
-                          {activity.title}
-                        </h3>
-                        
-                        {/* Meta info */}
-                        <div className="space-y-2 text-sm text-neutral-400">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4 text-[#8DC63F]" />
-                            {activity.date}
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-[#8DC63F]" />
-                            {activity.time}
-                          </div>
-                          {activity.spots && (
-                            <div className="flex items-center gap-2">
-                              <Users className="h-4 w-4 text-[#8DC63F]" />
-                              <span className="text-[#8DC63F] font-medium">{activity.spots} lugares disponibles</span>
-                            </div>
-                          )}
+        {/* Bento grid — asymmetric layout */}
+        <div className="activity-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5 lg:gap-6">
+          {upcomingActivities.map((activity, i) => {
+            // Bento spans: first and last are large, middle are standard
+            const spanClass = i === 0
+              ? 'lg:col-span-7 lg:row-span-2'
+              : i === 3
+                ? 'lg:col-span-7'
+                : 'lg:col-span-5'
+
+            return (
+              <TiltCard key={activity.id} className={`activity-card ${spanClass}`}>
+                <Link to={`/actividades/${activity.id}`} className="block group h-full">
+                  <div className={`relative h-full ${i === 0 ? 'min-h-[400px]' : 'min-h-[200px]'} rounded-2xl overflow-hidden border border-white/8 bg-white/[0.03] backdrop-blur-sm transition-all duration-500 hover:border-white/15 hover:bg-white/[0.06]`}>
+                    {/* Top accent */}
+                    <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ backgroundColor: activity.categoryColor }} />
+
+                    {/* Hover glow */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                      style={{
+                        background: `radial-gradient(circle at 50% 0%, ${activity.categoryColor}10, transparent 70%)`,
+                      }}
+                    />
+
+                    <div className="relative z-10 p-6 lg:p-8 flex flex-col h-full">
+                      {/* Category */}
+                      <span
+                        className="inline-block self-start text-xs font-bold text-white px-3 py-1.5 rounded-full mb-4"
+                        style={{ backgroundColor: activity.categoryColor }}
+                      >
+                        {activity.category}
+                      </span>
+
+                      {/* Title */}
+                      <h3 className={`font-display font-bold text-white mb-auto group-hover:text-[#FF6B35] transition-colors duration-300 ${i === 0 ? 'text-3xl lg:text-4xl' : 'text-xl lg:text-2xl'}`}>
+                        {activity.title}
+                      </h3>
+
+                      {/* Meta */}
+                      <div className="mt-6 space-y-2 text-sm text-white/50">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-[#FF6B35]" />
+                          {activity.date}
                         </div>
-                        
-                        {/* Arrow */}
-                        <div className="mt-5 pt-4 border-t border-neutral-700">
-                          <span className="text-sm font-medium text-[#8DC63F] flex items-center gap-1 group-hover:gap-2 transition-all">
-                            Ver detalles
-                            <ArrowRight className="h-4 w-4" />
-                          </span>
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4 text-[#FF6B35]" />
+                          {activity.time}
                         </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </Link>
-              </motion.div>
-            ))}
-            
-            {/* View more card */}
-            <Link
-              to="/actividades"
-              className="block shrink-0 w-[320px] md:w-[360px] snap-start"
-            >
-              <motion.div
-                whileHover={shouldReduceMotion ? {} : { y: -8, scale: 1.02 }}
-                whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
-                transition={{ duration: 0.25 }}
-                className="h-full"
-              >
-                <Card className="h-full min-h-[280px] bg-neutral-800/50 border-neutral-700 border-dashed hover:border-[#8DC63F]/50 transition-all duration-300 flex items-center justify-center">
-                  <div className="text-center p-6">
-                    <div className="w-16 h-16 bg-[#8DC63F]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <ArrowRight className="h-6 w-6 text-[#8DC63F]" />
+                        {activity.spots && (
+                          <div className="flex items-center gap-2">
+                            <Users className="h-4 w-4 text-[#00D4AA]" />
+                            <span className="text-[#00D4AA] font-medium">{activity.spots} lugares</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Arrow */}
+                      <div className="mt-4 pt-4 border-t border-white/8 flex items-center gap-2 text-[#FF6B35] text-sm font-medium opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-400">
+                        Ver detalles
+                        <ArrowRight className="h-4 w-4" />
+                      </div>
                     </div>
-                    <p className="text-white font-semibold mb-1">Ver más actividades</p>
-                    <p className="text-sm text-neutral-500">Consulta el calendario completo</p>
                   </div>
-                </Card>
-              </motion.div>
-            </Link>
-          </motion.div>
+                </Link>
+              </TiltCard>
+            )
+          })}
         </div>
       </div>
-
-      <style>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </section>
+  )
+}
+
+function MagneticWrap({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const handleMove = useCallback((e: React.MouseEvent) => {
+    const el = ref.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const x = e.clientX - rect.left - rect.width / 2
+    const y = e.clientY - rect.top - rect.height / 2
+    gsap.to(el, { x: x * 0.25, y: y * 0.25, duration: 0.3, ease: 'power2.out' })
+  }, [])
+  const handleLeave = useCallback(() => {
+    if (ref.current) gsap.to(ref.current, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.4)' })
+  }, [])
+  return (
+    <div ref={ref} onMouseMove={handleMove} onMouseLeave={handleLeave} className="inline-block">
+      {children}
+    </div>
   )
 }
