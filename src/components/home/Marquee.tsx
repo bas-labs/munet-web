@@ -41,14 +41,14 @@ export default function Marquee() {
           <span className="font-display text-2xl md:text-4xl font-bold tracking-tight whitespace-nowrap">
             {item}
           </span>
-          <span className="w-3 h-3 rounded-full bg-[#FF6B35] shrink-0" />
+          <span className="w-2 h-2 rounded-full bg-[#8DC63F] shrink-0" />
         </span>
       ))}
     </div>
   )
 
   return (
-    <div className="relative overflow-hidden py-8 md:py-12 bg-[#FF6B35] text-white select-none">
+    <div className="relative overflow-hidden py-8 md:py-12 bg-white text-[#09090B] select-none">
       <div ref={trackRef} className="flex items-center gap-8 will-change-transform">
         {renderSet('a')}
         {renderSet('b')}

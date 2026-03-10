@@ -84,14 +84,14 @@ export default function PlanificaSection() {
         {/* Header */}
         <div className="mb-16">
           <div className="flex items-center gap-4 mb-6">
-            <span className="inline-block bg-[#00D4AA]/10 text-[#00D4AA] text-label px-4 py-2 rounded-full">
+            <span className="inline-block bg-[#6BB52A]/10 text-[#6BB52A] text-label px-4 py-2 rounded-full">
               Tu Visita
             </span>
-            <div className="flex-1 h-px bg-gradient-to-r from-[#00D4AA]/30 to-transparent" />
+            <div className="flex-1 h-px bg-gradient-to-r from-[#6BB52A]/30 to-transparent" />
           </div>
           <h2 className="text-display-lg text-foreground max-w-2xl">
             Planifica tu Visita al{' '}
-            <span className="bg-gradient-to-r from-[#FF6B35] to-[#00D4AA] bg-clip-text text-transparent">MUNET</span>
+            <span className="bg-gradient-to-r from-[#8DC63F] to-[#6BB52A] bg-clip-text text-transparent">MUNET</span>
           </h2>
         </div>
 
@@ -109,7 +109,7 @@ export default function PlanificaSection() {
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl bg-gradient-to-r from-[#FF6B35]/10 to-[#00D4AA]/10 border border-[#FF6B35]/20 mb-8">
+            <div className="p-5 rounded-2xl bg-gradient-to-r from-[#8DC63F]/10 to-[#6BB52A]/10 border border-[#8DC63F]/20 mb-8">
               <p className="text-body-md text-foreground font-medium">
                 🎉 <strong>Domingos:</strong> Entrada gratuita para mexicanos y residentes
               </p>
@@ -119,7 +119,7 @@ export default function PlanificaSection() {
               <Button
                 asChild
                 size="lg"
-                className="bg-[#FF6B35] hover:bg-[#e55a28] text-white py-6 text-lg rounded-xl shadow-lg shadow-[#FF6B35]/20 flex-1"
+                className="bg-[#8DC63F] hover:bg-[#7BBF35] text-white py-6 text-lg rounded-xl shadow-lg shadow-[#8DC63F]/20 flex-1"
               >
                 <Link to="/boletos" className="flex items-center justify-center gap-2">
                   <Ticket className="h-5 w-5" />
@@ -142,8 +142,8 @@ export default function PlanificaSection() {
             {/* Hours */}
             <div className="info-card rounded-2xl p-6 lg:p-8 border border-neutral-100 bg-neutral-50/80 hover:shadow-lg hover:shadow-black/5 transition-shadow duration-500">
               <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-3">
-                <div className="h-10 w-10 bg-[#FF6B35]/10 rounded-xl flex items-center justify-center">
-                  <Clock className="h-5 w-5 text-[#FF6B35]" />
+                <div className="h-10 w-10 bg-[#8DC63F]/10 rounded-xl flex items-center justify-center">
+                  <Clock className="h-5 w-5 text-[#8DC63F]" />
                 </div>
                 Horarios
               </h3>
@@ -166,8 +166,8 @@ export default function PlanificaSection() {
             {/* Location */}
             <div className="info-card rounded-2xl p-6 lg:p-8 border border-neutral-100 bg-neutral-50/80 hover:shadow-lg hover:shadow-black/5 transition-shadow duration-500">
               <h3 className="text-xl font-bold text-foreground mb-4 flex items-center gap-3">
-                <div className="h-10 w-10 bg-[#00D4AA]/10 rounded-xl flex items-center justify-center">
-                  <MapPin className="h-5 w-5 text-[#00D4AA]" />
+                <div className="h-10 w-10 bg-[#6BB52A]/10 rounded-xl flex items-center justify-center">
+                  <MapPin className="h-5 w-5 text-[#6BB52A]" />
                 </div>
                 Ubicación
               </h3>
@@ -183,7 +183,7 @@ export default function PlanificaSection() {
                   { icon: Car, text: 'Estacionamiento' },
                 ].map(({ icon: Icon, text }) => (
                   <span key={text} className="inline-flex items-center gap-1.5 bg-white border border-neutral-200 text-muted-foreground px-3 py-1.5 rounded-full text-sm">
-                    <Icon className="h-3.5 w-3.5 text-[#00D4AA]" />
+                    <Icon className="h-3.5 w-3.5 text-[#6BB52A]" />
                     {text}
                   </span>
                 ))}

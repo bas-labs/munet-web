@@ -50,20 +50,20 @@ export default function NewsletterSection() {
 
       <div className="container mx-auto px-4 relative newsletter-content">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-[#FF6B35]/10 text-[#FF6B35] text-sm font-bold px-4 py-2 rounded-full mb-6">
+          <div className="inline-flex items-center gap-2 bg-[#8DC63F]/10 text-[#8DC63F] text-sm font-bold px-4 py-2 rounded-full mb-6">
             <Zap className="h-4 w-4" />
             Newsletter
           </div>
 
           <h2 className="text-display-md text-white mb-4">
-            Mantente <span className="bg-gradient-to-r from-[#FF6B35] to-[#00D4AA] bg-clip-text text-transparent">Conectado</span>
+            Mantente <span className="bg-gradient-to-r from-[#8DC63F] to-[#6BB52A] bg-clip-text text-transparent">Conectado</span>
           </h2>
           <p className="text-body-lg text-white/60 mb-10">
             Recibe noticias sobre exposiciones, actividades especiales y eventos exclusivos.
           </p>
 
           <form onSubmit={handleSubmit} className="relative max-w-lg mx-auto">
-            <div className={`relative rounded-2xl p-1 transition-all duration-500 ${focused ? 'bg-gradient-to-r from-[#FF6B35] to-[#00D4AA] shadow-[0_0_40px_rgba(255,107,53,0.3)]' : 'bg-white/10'}`}>
+            <div className={`relative rounded-2xl p-1 transition-all duration-500 ${focused ? 'bg-gradient-to-r from-[#8DC63F] to-[#6BB52A] shadow-[0_0_40px_rgba(255,107,53,0.3)]' : 'bg-white/10'}`}>
               <div className="flex flex-col sm:flex-row gap-2 bg-[#0a0a0a] rounded-xl p-1">
                 <input
                   type="email"
@@ -79,7 +79,7 @@ export default function NewsletterSection() {
                 <Button
                   type="submit"
                   disabled={status === 'loading' || status === 'success'}
-                  className="bg-[#FF6B35] hover:bg-[#e55a28] text-white px-8 py-4 text-base font-bold rounded-lg transition-all duration-300 disabled:opacity-50 shrink-0"
+                  className="bg-[#8DC63F] hover:bg-[#7BBF35] text-white px-8 py-4 text-base font-bold rounded-lg transition-all duration-300 disabled:opacity-50 shrink-0"
                 >
                   {status === 'loading' ? (
                     <span className="flex items-center gap-2">
@@ -95,7 +95,7 @@ export default function NewsletterSection() {
             </div>
 
             {status === 'success' && (
-              <p className="mt-4 text-[#00D4AA] font-medium animate-pulse">
+              <p className="mt-4 text-[#6BB52A] font-medium animate-pulse">
                 ¡Gracias por suscribirte! Pronto recibirás noticias de MUNET.
               </p>
             )}
