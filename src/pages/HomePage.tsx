@@ -23,8 +23,8 @@ export default function HomePage() {
       <HeroSection />
       <Marquee />
       <ExposicionesPreview />
-      <ActividadesHighlight />
       <PlanificaSection />
+      <ActividadesHighlight />
       <NewsletterSection />
       <RentaCTA />
     </PageLayout>

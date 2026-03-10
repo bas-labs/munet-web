@@ -12,7 +12,6 @@ const exhibitions = [
     title: 'Electricidad',
     description: 'El flujo de electrones, circuitos y la generación eléctrica que ilumina nuestro mundo.',
     icon: Zap,
-    gradient: 'from-amber-400 to-orange-600',
     accent: '#8DC63F',
     level: 1,
     number: '01',
@@ -23,7 +22,6 @@ const exhibitions = [
     title: 'Energía Solar',
     description: 'El sol como fuente primaria de energía renovable para el futuro de la humanidad.',
     icon: Sun,
-    gradient: 'from-yellow-400 to-amber-600',
     accent: '#FFB800',
     level: 2,
     number: '02',
@@ -34,7 +32,6 @@ const exhibitions = [
     title: 'Energía Nuclear',
     description: 'Fusión, fisión y el futuro de la energía limpia que transformará nuestra civilización.',
     icon: Atom,
-    gradient: 'from-[#6BB52A] to-teal-700',
     accent: '#6BB52A',
     level: 1,
     number: '03',
@@ -45,7 +42,6 @@ const exhibitions = [
     title: 'Sostenibilidad',
     description: 'Tecnología como habilitador del futuro energético sostenible del planeta.',
     icon: Leaf,
-    gradient: 'from-emerald-400 to-green-700',
     accent: '#22C55E',
     level: 1,
     number: '04',
@@ -56,7 +52,6 @@ const exhibitions = [
     title: 'Energía Eólica',
     description: 'El poder del viento transformado en electricidad a escala industrial.',
     icon: Wind,
-    gradient: 'from-cyan-400 to-blue-700',
     accent: '#06B6D4',
     level: 2,
     number: '05',
@@ -67,7 +62,6 @@ const exhibitions = [
     title: 'Combustibles Fósiles',
     description: 'Historia, impacto y la necesaria transición energética de la humanidad.',
     icon: Flame,
-    gradient: 'from-red-500 to-orange-700',
     accent: '#EF4444',
     level: 1,
     number: '06',
@@ -194,35 +188,34 @@ export default function ExposicionesPreview() {
                 to={`/exposiciones#${expo.id}`}
                 className="expo-card group block shrink-0 w-[80vw] sm:w-[45vw] lg:w-[30vw]"
               >
-                <div className="relative h-[420px] lg:h-[480px] rounded-2xl overflow-hidden border border-neutral-200/60 bg-white transition-all duration-500 hover:shadow-xl hover:shadow-black/5 hover:border-transparent">
+                <div className="relative h-[420px] lg:h-[480px] rounded-2xl overflow-hidden border border-white/10 bg-[#09090B] transition-all duration-500 hover:shadow-xl hover:shadow-black/20 hover:border-white/20">
                   {/* Background photo */}
-                  <img src={expo.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-                  <div className={`absolute inset-0 bg-gradient-to-br ${expo.gradient} opacity-80`} />
+                  <img src={expo.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-50 group-hover:opacity-60 transition-opacity duration-700" />
+                  {/* Dark gradient for text legibility */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
                   {/* Number watermark */}
-                  <div className="absolute top-4 right-6 font-display font-black text-[6rem] leading-none text-white/10 group-hover:text-white/20 transition-colors duration-500 select-none">
+                  <div className="absolute top-4 right-6 font-display font-black text-[6rem] leading-none text-white/[0.04] group-hover:text-white/[0.08] transition-colors duration-500 select-none">
                     {expo.number}
                   </div>
 
                   {/* Content */}
                   <div className="relative z-10 flex flex-col h-full p-7 lg:p-8">
                     {/* Icon */}
-                    <div
-                      className={`inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${expo.gradient} shadow-lg mb-auto`}
-                    >
-                      <Icon className="h-7 w-7 text-white" />
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/[0.08] backdrop-blur-sm border border-white/[0.06] mb-auto">
+                      <Icon className="h-6 w-6 text-white/70" />
                     </div>
 
                     {/* Level badge */}
-                    <span className="inline-block self-start text-[11px] font-medium uppercase tracking-wider text-muted-foreground bg-neutral-100 px-3 py-1 rounded-full mb-3 mt-6">
+                    <span className="inline-block self-start text-[11px] font-medium uppercase tracking-wider text-white/40 bg-white/[0.06] px-3 py-1 rounded-full mb-3 mt-6">
                       Nivel {expo.level}
                     </span>
 
-                    <h3 className="font-display text-2xl lg:text-3xl font-bold text-foreground mb-2 group-hover:translate-x-1 transition-transform duration-400">
+                    <h3 className="font-display text-2xl lg:text-3xl font-bold text-white mb-2 group-hover:translate-x-1 transition-transform duration-400">
                       {expo.title}
                     </h3>
 
-                    <p className="text-sm text-muted-foreground mb-5 max-w-sm leading-relaxed">
+                    <p className="text-sm text-white/50 mb-5 max-w-sm leading-relaxed">
                       {expo.description}
                     </p>
 
@@ -233,11 +226,8 @@ export default function ExposicionesPreview() {
                     </div>
                   </div>
 
-                  {/* Bottom accent line */}
-                  <div
-                    className="absolute bottom-0 left-0 right-0 h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
-                    style={{ backgroundColor: expo.accent }}
-                  />
+                  {/* Bottom accent line — thin white */}
+                  <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                 </div>
               </Link>
             )

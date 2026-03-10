@@ -184,8 +184,8 @@ export default function ExposicionesPage() {
         ]}
       />
 
-      {/* Dark Hero */}
-      <section className="relative overflow-hidden bg-[#09090B] pb-28 pt-12">
+      {/* Full-screen Dark Hero */}
+      <section className="relative flex items-end overflow-hidden bg-[#09090B] h-[100dvh] min-h-[600px]">
         <img
           src="/images/fotogaleria/exteriormuseo/RHG_3698And8more_Optimizer.jpg"
           alt=""
@@ -194,7 +194,7 @@ export default function ExposicionesPage() {
         <GrainOverlay />
         <AmbientGlow position="top-right" />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 pb-24">
           <div className="max-w-3xl">
             <TextClipReveal>
               <h1 className="font-display text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
@@ -211,10 +211,18 @@ export default function ExposicionesPage() {
               en dos niveles del museo.
             </p>
           </div>
+        </div>
 
-          {/* Floor toggle tabs */}
+        {/* Dark-to-white gradient */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/80 to-transparent z-[1] pointer-events-none" />
+      </section>
+
+      {/* Content */}
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        {/* Floor toggle tabs */}
+        <div className="flex flex-col items-center mb-12">
           <div
-            className="relative mt-12 flex gap-1 rounded-full border border-white/10 bg-white/5 p-1 w-fit"
+            className="relative flex gap-1 rounded-full border border-border bg-muted/50 p-1 w-fit"
             role="tablist"
             aria-label="Niveles del museo"
           >
@@ -227,10 +235,10 @@ export default function ExposicionesPage() {
                 id={`nivel${tab.level}-tab`}
                 onClick={() => handleLevelSwitch(tab.level)}
                 className={cn(
-                  'relative z-10 rounded-full px-6 py-2.5 text-sm font-medium transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8DC63F] focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090B]',
+                  'relative z-10 rounded-full px-6 py-2.5 text-sm font-medium transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8DC63F] focus-visible:ring-offset-2',
                   activeLevel === tab.level
                     ? 'text-[#09090B]'
-                    : 'text-white/60 hover:text-white/90',
+                    : 'text-muted-foreground hover:text-foreground',
                 )}
               >
                 {tab.label}
@@ -248,12 +256,6 @@ export default function ExposicionesPage() {
           </div>
         </div>
 
-        {/* Dark-to-white gradient */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white/80 to-transparent z-[1] pointer-events-none" />
-      </section>
-
-      {/* Card Grid */}
-      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         {/* Floor Plan */}
         <div className="mb-12">
           <img
