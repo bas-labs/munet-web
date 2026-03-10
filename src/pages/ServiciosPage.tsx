@@ -10,6 +10,7 @@ import { Calendar, Ticket, Mail, ChevronRight } from 'lucide-react'
 
 import { PageLayout } from '@/components/layout'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
+import { SEOHead, StructuredData } from '@/components/seo'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -43,6 +44,20 @@ export default function ServiciosPage() {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Servicios"
+        description="Servicios y amenidades de MUNET: cafetería, tienda, guardarropa, Wi-Fi gratuito, sanitarios y estacionamiento. Todo para tu comodidad."
+        canonicalPath="/servicios"
+        keywords={['servicios museo', 'cafetería MUNET', 'tienda museo', 'estacionamiento Chapultepec']}
+      />
+      <StructuredData
+        type="breadcrumb"
+        breadcrumbItems={[
+          { name: 'Inicio', path: '/' },
+          { name: 'Servicios', path: '/servicios' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-b from-muted/50 to-background py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

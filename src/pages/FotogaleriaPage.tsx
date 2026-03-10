@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react'
 import { PageLayout } from '@/components/layout'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
+import { SEOHead, StructuredData } from '@/components/seo'
 import { CategoryFilter, MasonryGrid, Lightbox } from '@/components/gallery'
 import { galleryImages, type GalleryCategory } from '@/data/gallery'
 
@@ -39,6 +40,20 @@ export default function FotogaleriaPage() {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Fotogalería"
+        description="Explora MUNET a través de imágenes. Arquitectura, exposiciones, eventos y construcción del Museo Nacional de Energía y Tecnología."
+        canonicalPath="/fotogaleria"
+        keywords={['fotos museo', 'galería MUNET', 'arquitectura Chapultepec', 'exposiciones CDMX']}
+      />
+      <StructuredData
+        type="breadcrumb"
+        breadcrumbItems={[
+          { name: 'Inicio', path: '/' },
+          { name: 'Fotogalería', path: '/fotogaleria' },
+        ]}
+      />
+      
       {/* Page Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900">
         {/* Background pattern */}

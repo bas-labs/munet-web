@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { PageLayout } from '@/components/layout'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
+import { SEOHead, StructuredData } from '@/components/seo'
 import { DatePicker, TicketSelector, OrderSummary, TICKET_TYPES, type TicketQuantities } from '@/components/tickets'
 
 /**
@@ -88,6 +89,20 @@ export default function BoletosPage() {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Comprar Boletos"
+        description="Compra tus boletos en línea para MUNET. Entrada general $120 MXN, descuentos para estudiantes e INAPAM. Domingos entrada gratuita para nacionales mexicanos."
+        canonicalPath="/boletos"
+        keywords={['boletos museo', 'comprar tickets', 'entrada MUNET', 'precios museo']}
+      />
+      <StructuredData
+        type="breadcrumb"
+        breadcrumbItems={[
+          { name: 'Inicio', path: '/' },
+          { name: 'Boletos', path: '/boletos' },
+        ]}
+      />
+
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <Breadcrumb items={[{ label: 'Boletos' }]} />
 
@@ -103,7 +118,10 @@ export default function BoletosPage() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form 
+          onSubmit={handleSubmit(onSubmit)}
+          aria-label="Formulario de compra de boletos"
+        >
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Left column: Date picker + Ticket selector */}
             <div className="lg:col-span-2 space-y-6">
@@ -154,8 +172,13 @@ export default function BoletosPage() {
         </form>
 
         {/* Additional info section */}
-        <div className="mt-16 border-t border-border pt-12">
-          <h2 className="text-2xl font-bold mb-6">Información Importante</h2>
+        <section 
+          className="mt-16 border-t border-border pt-12"
+          aria-labelledby="info-heading"
+        >
+          <h2 id="info-heading" className="text-2xl font-bold mb-6">
+            Información Importante
+          </h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <InfoCard
               title="Horario"
@@ -170,7 +193,7 @@ export default function BoletosPage() {
               description="Entrada gratuita para nacionales mexicanos todos los domingos."
             />
           </div>
-        </div>
+        </section>
       </div>
     </PageLayout>
   )
@@ -181,9 +204,9 @@ export default function BoletosPage() {
  */
 function InfoCard({ title, description }: { title: string; description: string }) {
   return (
-    <div className="rounded-lg border border-border bg-card p-6">
+    <article className="rounded-lg border border-border bg-card p-6">
       <h3 className="font-semibold mb-2">{title}</h3>
       <p className="text-sm text-muted-foreground">{description}</p>
-    </div>
+    </article>
   )
 }

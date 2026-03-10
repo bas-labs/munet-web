@@ -7,6 +7,7 @@
 import * as React from 'react'
 import { PageLayout } from '@/components/layout'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
+import { SEOHead, StructuredData } from '@/components/seo'
 import { Button } from '@/components/ui/button'
 import { SpaceCard, SpaceDetail, InquiryForm } from '@/components/spaces'
 import { SPACES } from '@/lib/data/spaces'
@@ -51,6 +52,20 @@ export default function RentaEspaciosPage() {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Renta de Espacios"
+        description="Renta espacios únicos en MUNET para tu evento. Auditorio, salas, talleres, foro al aire libre y explanada. Arquitectura de Enrique Norten en Chapultepec."
+        canonicalPath="/renta-de-espacios"
+        keywords={['renta espacios CDMX', 'eventos corporativos', 'venue Chapultepec', 'auditorio museo']}
+      />
+      <StructuredData
+        type="breadcrumb"
+        breadcrumbItems={[
+          { name: 'Inicio', path: '/' },
+          { name: 'Renta de Espacios', path: '/renta-de-espacios' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-primary text-primary-foreground">
         {/* Background Image Placeholder */}

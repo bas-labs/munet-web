@@ -1,13 +1,124 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    
+    <!-- Primary Meta Tags -->
+    <title>MUNET — Museo Nacional de Energía y Tecnología</title>
+    <meta name="title" content="MUNET — Museo Nacional de Energía y Tecnología" />
+    <meta name="description" content="Descubre el universo de la energía en el Museo Nacional de Energía y Tecnología. Ubicado en Bosque de Chapultepec, CDMX. Compra boletos, explora exposiciones y planifica tu visita." />
+    <meta name="keywords" content="museo, energía, tecnología, MUNET, Chapultepec, CDMX, exposiciones, ciencia" />
+    <meta name="author" content="MUNET" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>munet-web</title>
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#1A1A1A" />
+    <meta name="msapplication-TileColor" content="#1A1A1A" />
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://museomunet.com/" />
+    <meta property="og:title" content="MUNET — Museo Nacional de Energía y Tecnología" />
+    <meta property="og:description" content="Descubre el universo de la energía en el Museo Nacional de Energía y Tecnología. Ubicado en Bosque de Chapultepec, CDMX." />
+    <meta property="og:image" content="https://museomunet.com/og-image.jpg" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:site_name" content="MUNET" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://museomunet.com/" />
+    <meta property="twitter:title" content="MUNET — Museo Nacional de Energía y Tecnología" />
+    <meta property="twitter:description" content="Descubre el universo de la energía en el Museo Nacional de Energía y Tecnología. Ubicado en Bosque de Chapultepec, CDMX." />
+    <meta property="twitter:image" content="https://museomunet.com/og-image.jpg" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://museomunet.com/" />
+    
+    <!-- =================================================================
+         PERFORMANCE OPTIMIZATIONS - Resource Hints
+         ================================================================= -->
+    
+    <!-- DNS Prefetch - External domains we'll connect to -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="https://api.stripe.com" />
+    <link rel="dns-prefetch" href="https://js.stripe.com" />
+    <link rel="dns-prefetch" href="https://maps.googleapis.com" />
+    
+    <!-- Preconnect - Critical external origins (fonts load early) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Structured Data - Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Museum",
+      "name": "MUNET — Museo Nacional de Energía y Tecnología",
+      "alternateName": "MUNET",
+      "url": "https://museomunet.com",
+      "logo": "https://museomunet.com/logo.png",
+      "description": "Museo Nacional de Energía y Tecnología de México, ubicado en Bosque de Chapultepec",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Av. de los Compositores s/n, Bosque de Chapultepec II Secc.",
+        "addressLocality": "Ciudad de México",
+        "addressRegion": "CDMX",
+        "postalCode": "11580",
+        "addressCountry": "MX"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 19.4194,
+        "longitude": -99.2028
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "10:00",
+          "closes": "18:00"
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/MuseoMUNET",
+        "https://www.instagram.com/museomunet",
+        "https://www.youtube.com/@museomunet",
+        "https://www.tiktok.com/@museomunet"
+      ],
+      "priceRange": "$60 - $120 MXN",
+      "currenciesAccepted": "MXN",
+      "paymentAccepted": "Cash, Credit Card"
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Register Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('SW registered:', registration.scope);
+            })
+            .catch(error => {
+              console.log('SW registration failed:', error);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

@@ -1,0 +1,15 @@
+# robots.txt for MUNET - Museo Nacional de Energía y Tecnología
+# https://museomunet.com
+
+User-agent: *
+Allow: /
+
+# Exclude checkout pages from indexing
+Disallow: /checkout/
+Disallow: /mis-boletos
+
+# Sitemap location
+Sitemap: https://museomunet.com/sitemap.xml
+
+# Crawl-delay (optional, be nice to the server)
+Crawl-delay: 1

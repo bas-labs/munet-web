@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { PageLayout } from '@/components/layout'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
+import { SEOHead, StructuredData } from '@/components/seo'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -118,6 +119,20 @@ const JOB_OPENINGS = [
 export default function InvolucratePage() {
   return (
     <PageLayout>
+      <SEOHead
+        title="Involúcrate"
+        description="Voluntariado, donaciones, alianzas corporativas y bolsa de trabajo en MUNET. Sé parte del movimiento por la educación y la sostenibilidad."
+        canonicalPath="/involucrate"
+        keywords={['voluntariado museo', 'donaciones MUNET', 'vacantes museo', 'alianzas corporativas']}
+      />
+      <StructuredData
+        type="breadcrumb"
+        breadcrumbItems={[
+          { name: 'Inicio', path: '/' },
+          { name: 'Involúcrate', path: '/involucrate' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 py-20 text-primary-foreground">
         <div className="absolute inset-0 bg-[url('/images/pattern-energy.svg')] opacity-10" />

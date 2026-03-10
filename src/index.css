@@ -9,6 +9,21 @@
 @custom-variant dark (&:is(.dark *));
 
 /* =============================================================================
+   Font Optimization - Ensure font-display: swap
+   Prevents invisible text during font loading (FOIT)
+============================================================================= */
+
+@font-face {
+  font-family: 'DM Sans Variable';
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter Variable';
+  font-display: swap;
+}
+
+/* =============================================================================
    MUNET Design System - Design Tokens
    Based on PRD Section 6.1
 ============================================================================= */

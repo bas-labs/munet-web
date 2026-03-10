@@ -9,6 +9,7 @@ import { Calendar, Sparkles } from 'lucide-react'
 
 import { PageLayout } from '@/components/layout'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
+import { SEOHead, StructuredData } from '@/components/seo'
 import {
   EventCalendar,
   EventCard,
@@ -65,6 +66,20 @@ export default function ActividadesPage() {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Actividades y Programas"
+        description="Talleres, conferencias, visitas guiadas y programas educativos en MUNET. Descubre eventos sobre energía y tecnología para todas las edades."
+        canonicalPath="/actividades"
+        keywords={['talleres museo', 'actividades CDMX', 'eventos ciencia', 'programas educativos', 'visitas guiadas']}
+      />
+      <StructuredData
+        type="breadcrumb"
+        breadcrumbItems={[
+          { name: 'Inicio', path: '/' },
+          { name: 'Actividades', path: '/actividades' },
+        ]}
+      />
+      
       {/* Page Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/90">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />

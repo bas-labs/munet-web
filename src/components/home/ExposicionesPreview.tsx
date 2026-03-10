@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { motion, useReducedMotion, type Variants, type Easing } from 'framer-motion'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
@@ -55,60 +56,129 @@ const exhibitions: Exhibition[] = [
   },
 ]
 
+// Custom easing as proper tuple
+const easeOutQuad: Easing = [0.25, 0.46, 0.45, 0.94]
+
+// Animation variants
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+}
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: easeOutQuad,
+    },
+  },
+}
+
 export default function ExposicionesPreview() {
+  const shouldReduceMotion = useReducedMotion()
+
   return (
     <section className="py-20 lg:py-32 bg-neutral-50">
       <div className="container mx-auto px-4">
         {/* Section header */}
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6 }}
+        >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 mb-4">
             Explora el Universo de la Energía
           </h2>
           <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
             Sumérgete en las diferentes manifestaciones de la energía y descubre cómo transforman nuestro mundo.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Bento grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-12">
+        {/* Bento grid with stagger animation */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-12"
+          variants={shouldReduceMotion ? undefined : containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+        >
           {exhibitions.map((exhibition, index) => (
-            <Link
+            <motion.div
               key={exhibition.id}
-              to={`/exposiciones#${exhibition.id}`}
-              className={`block group ${index === 0 ? 'md:col-span-2 lg:col-span-1' : ''}`}
+              variants={shouldReduceMotion ? undefined : itemVariants}
+              className={index === 0 ? 'md:col-span-2 lg:col-span-1' : ''}
             >
-              <Card className="relative h-full min-h-[200px] lg:min-h-[240px] p-6 border-0 bg-gradient-to-br ${exhibition.color} hover:shadow-xl transition-all duration-300 group-hover:scale-[1.02] overflow-hidden">
-                {/* Background decoration */}
-                <div className="absolute top-4 right-4 text-6xl opacity-20 group-hover:opacity-30 transition-opacity">
-                  {exhibition.icon}
-                </div>
-                
-                {/* Content */}
-                <div className="relative z-10 flex flex-col h-full">
-                  <span className="text-4xl mb-4">{exhibition.icon}</span>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">
-                    {exhibition.title}
-                  </h3>
-                  <p className="text-neutral-600 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    {exhibition.description}
-                  </p>
-                </div>
-              </Card>
-            </Link>
+              <Link
+                to={`/exposiciones#${exhibition.id}`}
+                className="block group h-full"
+              >
+                <motion.div
+                  whileHover={shouldReduceMotion ? {} : { scale: 1.02, y: -4 }}
+                  whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                  transition={{ duration: 0.2 }}
+                  className="h-full"
+                >
+                  <Card className={`relative h-full min-h-[200px] lg:min-h-[240px] p-6 border-0 bg-gradient-to-br ${exhibition.color} transition-shadow duration-300 hover:shadow-xl overflow-hidden`}>
+                    {/* Background decoration */}
+                    <motion.div
+                      className="absolute top-4 right-4 text-6xl opacity-20"
+                      whileHover={shouldReduceMotion ? {} : { opacity: 0.35, scale: 1.1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {exhibition.icon}
+                    </motion.div>
+                    
+                    {/* Content */}
+                    <div className="relative z-10 flex flex-col h-full">
+                      <span className="text-4xl mb-4">{exhibition.icon}</span>
+                      <h3 className="text-xl font-semibold text-neutral-900 mb-2">
+                        {exhibition.title}
+                      </h3>
+                      <p className="text-neutral-600 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {exhibition.description}
+                      </p>
+                    </div>
+                  </Card>
+                </motion.div>
+              </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* CTA */}
-        <div className="text-center">
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="border-neutral-300 hover:border-neutral-400 text-neutral-700 px-8"
+        <motion.div
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <motion.div
+            whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+            whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+            className="inline-block"
           >
-            <Link to="/exposiciones">Ver Todas las Exposiciones</Link>
-          </Button>
-        </div>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="border-neutral-300 hover:border-neutral-400 text-neutral-700 px-8"
+            >
+              <Link to="/exposiciones">Ver Todas las Exposiciones</Link>
+            </Button>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   )

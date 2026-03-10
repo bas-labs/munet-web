@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { PageLayout } from '@/components/layout'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
+import { SEOHead, StructuredData } from '@/components/seo'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { ContactForm } from '@/components/contact'
 
@@ -86,6 +87,20 @@ const SOCIAL_LINKS = [
 export default function ContactoPage() {
   return (
     <PageLayout>
+      <SEOHead
+        title="Contacto"
+        description="Contáctanos para información sobre visitas, grupos escolares, renta de espacios y más. MUNET - Museo Nacional de Energía y Tecnología."
+        canonicalPath="/contacto"
+        keywords={['contacto MUNET', 'teléfono museo', 'email museo', 'visitas grupales']}
+      />
+      <StructuredData
+        type="breadcrumb"
+        breadcrumbItems={[
+          { name: 'Inicio', path: '/' },
+          { name: 'Contacto', path: '/contacto' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 py-20 text-primary-foreground">
         <div className="absolute inset-0 bg-[url('/images/pattern-energy.svg')] opacity-10" />

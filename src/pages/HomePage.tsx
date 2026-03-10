@@ -1,13 +1,30 @@
 import { Link } from 'react-router-dom'
 import { PageLayout } from '@/components/layout'
 import { Button } from '@/components/ui/button'
+import { SEOHead, StructuredData } from '@/components/seo'
 
 export default function HomePage() {
   return (
     <PageLayout>
+      {/* SEO */}
+      <SEOHead
+        title="Inicio"
+        description="MUNET — Museo Nacional de Energía y Tecnología. El primer museo nacional de México dedicado a la energía y tecnología. Ubicado en el Bosque de Chapultepec, CDMX."
+        canonicalPath="/"
+        keywords={['museo CDMX', 'energía renovable', 'ciencia para niños', 'actividades familiares']}
+      />
+      <StructuredData type="organization" />
+      <StructuredData type="museum" />
+
       {/* Hero Section */}
-      <section className="relative flex min-h-[80vh] flex-col items-center justify-center bg-gradient-to-b from-background to-muted px-4 text-center">
-        <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+      <section 
+        className="relative flex min-h-[80vh] flex-col items-center justify-center bg-gradient-to-b from-background to-muted px-4 text-center"
+        aria-labelledby="hero-heading"
+      >
+        <h1 
+          id="hero-heading"
+          className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
+        >
           El conocimiento no te crea ni te destruye.{' '}
           <span className="text-primary">Te transforma.</span>
         </h1>
@@ -26,8 +43,11 @@ export default function HomePage() {
       </section>
 
       {/* Exposiciones Preview */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold sm:text-3xl">
+      <section 
+        className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8"
+        aria-labelledby="exposiciones-heading"
+      >
+        <h2 id="exposiciones-heading" className="text-2xl font-bold sm:text-3xl">
           Explora el Universo de la Energía
         </h2>
         <p className="mt-2 text-muted-foreground">
@@ -36,16 +56,16 @@ export default function HomePage() {
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {/* Placeholder cards - will be replaced with actual exhibition data */}
           {['Energía Solar', 'Energía Eólica', 'Electricidad'].map((title) => (
-            <div
+            <article
               key={title}
-              className="rounded-lg border border-border bg-card p-6 transition-shadow hover:shadow-md"
+              className="rounded-lg border border-border bg-card p-6 transition-shadow hover:shadow-md focus-within:ring-2 focus-within:ring-ring"
             >
-              <div className="mb-4 h-32 rounded-md bg-muted" />
+              <div className="mb-4 h-32 rounded-md bg-muted" aria-hidden="true" />
               <h3 className="font-semibold">{title}</h3>
               <p className="mt-1 text-sm text-muted-foreground">
                 Explora los conceptos fundamentales de {title.toLowerCase()}.
               </p>
-            </div>
+            </article>
           ))}
         </div>
         <div className="mt-8 text-center">
@@ -56,11 +76,14 @@ export default function HomePage() {
       </section>
 
       {/* Planifica Section */}
-      <section className="border-y border-border bg-muted/30 py-16">
+      <section 
+        className="border-y border-border bg-muted/30 py-16"
+        aria-labelledby="planifica-heading"
+      >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 md:grid-cols-2">
             <div>
-              <h2 className="text-2xl font-bold sm:text-3xl">
+              <h2 id="planifica-heading" className="text-2xl font-bold sm:text-3xl">
                 Planifica tu Visita
               </h2>
               <div className="mt-6 space-y-4">
@@ -73,16 +96,20 @@ export default function HomePage() {
                 </div>
                 <div>
                   <h3 className="font-semibold">Ubicación</h3>
-                  <p className="text-muted-foreground">
+                  <address className="text-muted-foreground not-italic">
                     Av. de los Compositores s/n, Bosque de Chapultepec II Secc.
-                  </p>
+                  </address>
                 </div>
               </div>
               <Button asChild className="mt-6">
                 <Link to="/planifica-tu-visita">Ver Horarios Completos</Link>
               </Button>
             </div>
-            <div className="h-64 rounded-lg bg-muted">
+            <div 
+              className="h-64 rounded-lg bg-muted" 
+              role="img" 
+              aria-label="Mapa de ubicación del museo"
+            >
               {/* Map placeholder */}
             </div>
           </div>
@@ -90,21 +117,30 @@ export default function HomePage() {
       </section>
 
       {/* Actividades Highlight */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold sm:text-3xl">Próximas Actividades</h2>
+      <section 
+        className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8"
+        aria-labelledby="actividades-heading"
+      >
+        <h2 id="actividades-heading" className="text-2xl font-bold sm:text-3xl">
+          Próximas Actividades
+        </h2>
         <p className="mt-2 text-muted-foreground">
           Talleres, conferencias y eventos especiales.
         </p>
-        <div className="mt-8 flex gap-4 overflow-x-auto pb-4">
+        <div 
+          className="mt-8 flex gap-4 overflow-x-auto pb-4"
+          role="region"
+          aria-label="Carrusel de actividades"
+        >
           {[1, 2, 3].map((i) => (
-            <div
+            <article
               key={i}
               className="min-w-[280px] flex-shrink-0 rounded-lg border border-border bg-card p-4"
             >
-              <div className="mb-3 h-24 rounded-md bg-muted" />
+              <div className="mb-3 h-24 rounded-md bg-muted" aria-hidden="true" />
               <p className="text-sm text-muted-foreground">Próximamente</p>
               <h3 className="font-semibold">Actividad {i}</h3>
-            </div>
+            </article>
           ))}
         </div>
         <div className="mt-4 text-center">
@@ -115,9 +151,12 @@ export default function HomePage() {
       </section>
 
       {/* Renta CTA */}
-      <section className="relative bg-primary py-20 text-primary-foreground">
+      <section 
+        className="relative bg-primary py-20 text-primary-foreground"
+        aria-labelledby="renta-heading"
+      >
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold sm:text-3xl">
+          <h2 id="renta-heading" className="text-2xl font-bold sm:text-3xl">
             Haz de tu Evento algo Extraordinario
           </h2>
           <p className="mt-4 text-primary-foreground/80">

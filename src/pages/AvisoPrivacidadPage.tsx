@@ -8,6 +8,7 @@ import { PageLayout } from '@/components/layout'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
 import { Card, CardContent } from '@/components/ui/card'
 import { Mail, Shield, FileText, AlertCircle } from 'lucide-react'
+import { SEOHead, StructuredData } from '@/components/seo'
 
 // Table of contents sections
 const SECTIONS = [
@@ -31,6 +32,20 @@ export default function AvisoPrivacidadPage() {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Aviso de Privacidad"
+        description="Aviso de privacidad de MUNET. Conoce cómo recopilamos, utilizamos y protegemos tus datos personales conforme a la ley mexicana."
+        canonicalPath="/aviso-de-privacidad"
+        noIndex={false}
+      />
+      <StructuredData
+        type="breadcrumb"
+        breadcrumbItems={[
+          { name: 'Inicio', path: '/' },
+          { name: 'Aviso de Privacidad', path: '/aviso-de-privacidad' },
+        ]}
+      />
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 py-16 text-primary-foreground">
         <div className="absolute inset-0 bg-[url('/images/pattern-energy.svg')] opacity-10" />
