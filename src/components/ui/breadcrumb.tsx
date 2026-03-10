@@ -20,7 +20,7 @@ export function Breadcrumb({ items, className, showHome = true }: BreadcrumbProp
       aria-label="Breadcrumb"
       className={cn('flex items-center text-sm', className)}
     >
-      <ol className="flex items-center gap-1.5">
+      <ol className="flex list-none items-center gap-1.5 m-0 p-0">
         {showHome && (
           <>
             <li>

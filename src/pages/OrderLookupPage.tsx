@@ -1,20 +1,26 @@
 /**
  * OrderLookupPage - /mis-boletos
- * 
+ *
  * Allows customers to look up their orders by email and confirmation code
  * Displays order details and QR code for museum entry
  */
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import gsap from 'gsap';
 import { PageLayout } from '@/components/layout';
 import { Container } from '@/components/ui/container';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { QRTicket } from '@/components/tickets/QRTicket';
+import { TextClipReveal } from '@/components/ui/gsap-primitives';
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
 
 // Validation schema
 const lookupSchema = z.object({
@@ -49,6 +55,12 @@ export function OrderLookupPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const formCardRef = useRef<HTMLDivElement>(null);
+  const qrTicketRef = useRef<HTMLDivElement>(null);
+  const detailsRef = useRef<HTMLDivElement>(null);
+  const errorRef = useRef<HTMLDivElement>(null);
+
   const {
     register,
     handleSubmit,
@@ -57,21 +69,77 @@ export function OrderLookupPage() {
     resolver: zodResolver(lookupSchema),
   });
 
+  // Form card scale-in on mount
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    if (!formCardRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from(formCardRef.current, {
+        scale: 0.95,
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Success state animations - fire when order is found
+  useEffect(() => {
+    if (!order) return;
+    if (prefersReducedMotion()) return;
+
+    const ctx = gsap.context(() => {
+      // QR ticket scales in from left
+      if (qrTicketRef.current) {
+        gsap.from(qrTicketRef.current, {
+          x: -40,
+          opacity: 0,
+          duration: 0.5,
+          ease: 'power3.out',
+        });
+      }
+
+      // Order details slide from right
+      if (detailsRef.current) {
+        gsap.from(detailsRef.current, {
+          x: 40,
+          opacity: 0,
+          duration: 0.5,
+          delay: 0.15,
+        });
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, [order]);
+
+  // Error state animation - shake on error
+  useEffect(() => {
+    if (!error) return;
+    if (prefersReducedMotion()) return;
+    if (!errorRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.to(errorRef.current, {
+        x: -10,
+        duration: 0.1,
+        repeat: 3,
+        yoyo: true,
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, [error]);
+
   const onSubmit = async (data: LookupFormData) => {
     setIsLoading(true);
     setError(null);
     setOrder(null);
 
     try {
-      // TODO: Replace with actual API call
-      // const response = await fetch(`/api/orders/lookup`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data),
-      // });
-      // const orderData = await response.json();
-
-      // Mock response for demonstration
       // Simulating API delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -122,9 +190,11 @@ export function OrderLookupPage() {
       <section className="bg-gradient-to-b from-primary/5 to-background py-16 md:py-24">
         <Container>
           <div className="text-center max-w-2xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold font-display text-primary mb-4">
-              Mis Boletos
-            </h1>
+            <TextClipReveal>
+              <h1 className="text-4xl md:text-5xl font-bold font-display text-primary mb-4">
+                Mis Boletos
+              </h1>
+            </TextClipReveal>
             <p className="text-lg text-muted-foreground">
               Ingresa tu correo electrónico y número de confirmación para ver
               tus boletos
@@ -134,10 +204,10 @@ export function OrderLookupPage() {
       </section>
 
       {/* Lookup Form */}
-      <section className="py-12 md:py-16">
+      <section ref={containerRef} className="py-12 md:py-16">
         <Container className="max-w-4xl">
           {!order ? (
-            <Card className="max-w-md mx-auto">
+            <Card ref={formCardRef} className="max-w-md mx-auto">
               <CardHeader>
                 <CardTitle className="text-center">Buscar mi orden</CardTitle>
               </CardHeader>
@@ -186,7 +256,10 @@ export function OrderLookupPage() {
                   </div>
 
                   {error && (
-                    <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-lg">
+                    <div
+                      ref={errorRef}
+                      className="bg-destructive/10 text-destructive text-sm p-3 rounded-lg"
+                    >
                       {error}
                     </div>
                   )}
@@ -240,7 +313,7 @@ export function OrderLookupPage() {
             /* Order Found - Display Ticket */
             <div className="grid md:grid-cols-2 gap-8 items-start">
               {/* QR Ticket */}
-              <div>
+              <div ref={qrTicketRef}>
                 <QRTicket
                   qrCodeDataUrl={order.qrCodeDataUrl}
                   orderId={order.orderId}
@@ -254,7 +327,7 @@ export function OrderLookupPage() {
               </div>
 
               {/* Order Details */}
-              <div className="space-y-6">
+              <div ref={detailsRef} className="space-y-6">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">

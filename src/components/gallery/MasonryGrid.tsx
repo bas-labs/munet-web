@@ -56,7 +56,7 @@ export default function MasonryGrid({
       {filteredImages.map((image, index) => (
         <div
           key={image.id}
-          className="animate-in fade-in-0 zoom-in-95 duration-300"
+          className="masonry-item animate-in fade-in-0 zoom-in-95 duration-300"
           style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'both' }}
         >
           <GalleryImage

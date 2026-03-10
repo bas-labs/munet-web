@@ -5,7 +5,6 @@
  */
 
 import { PageLayout } from '@/components/layout'
-import { Breadcrumb } from '@/components/ui/breadcrumb'
 import { Card, CardContent } from '@/components/ui/card'
 import { Mail, Shield, FileText, AlertCircle } from 'lucide-react'
 import { SEOHead, StructuredData } from '@/components/seo'
@@ -50,10 +49,6 @@ export default function AvisoPrivacidadPage() {
       <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 py-16 text-primary-foreground">
         <div className="absolute inset-0 bg-[url('/images/pattern-energy.svg')] opacity-10" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Breadcrumb
-            items={[{ label: 'Aviso de Privacidad' }]}
-            className="mb-8 text-primary-foreground/70"
-          />
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-foreground/10">
               <Shield className="h-7 w-7" />

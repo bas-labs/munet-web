@@ -2,10 +2,18 @@ import * as React from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import gsap from 'gsap'
 import { PageLayout } from '@/components/layout'
-import { Breadcrumb } from '@/components/ui/breadcrumb'
 import { SEOHead, StructuredData } from '@/components/seo'
 import { DatePicker, TicketSelector, OrderSummary, TICKET_TYPES, type TicketQuantities } from '@/components/tickets'
+import {
+  TextClipReveal,
+  useStaggerReveal,
+} from '@/components/ui/gsap-primitives'
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
 
 /**
  * Zod schema for ticket form validation
@@ -37,16 +45,59 @@ const ticketFormSchema = z.object({
 type TicketFormData = z.infer<typeof ticketFormSchema>
 
 /**
+ * Ticket outline SVG for hero stroke-draw animation
+ */
+function TicketSVG() {
+  const pathRef = React.useRef<SVGPathElement>(null)
+
+  React.useEffect(() => {
+    if (prefersReducedMotion() || !pathRef.current) return
+
+    const path = pathRef.current
+    const length = path.getTotalLength()
+
+    const ctx = gsap.context(() => {
+      gsap.set(path, { strokeDasharray: length, strokeDashoffset: length })
+      gsap.to(path, {
+        strokeDashoffset: 0,
+        duration: 2,
+        delay: 0.3,
+        ease: 'power2.inOut',
+      })
+    })
+
+    return () => ctx.revert()
+  }, [])
+
+  return (
+    <svg
+      className="absolute right-8 top-1/2 -translate-y-1/2 hidden md:block"
+      width="200"
+      height="120"
+      viewBox="0 0 200 120"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        ref={pathRef}
+        d="M20 10 h160 a10 10 0 0 1 10 10 v25 a15 15 0 0 0 0 30 v25 a10 10 0 0 1 -10 10 h-160 a10 10 0 0 1 -10 -10 v-25 a15 15 0 0 0 0 -30 v-25 a10 10 0 0 1 10 -10 z"
+        stroke="#8DC63F"
+        strokeWidth="2"
+        strokeOpacity="0.3"
+      />
+    </svg>
+  )
+}
+
+/**
  * BoletosPage - Ticket purchasing interface for MUNET
- *
- * Features:
- * - Date picker with Sunday free admission detection
- * - Ticket type selector with quantity controls
- * - Order summary with total calculation
- * - Form validation with React Hook Form + Zod
- * - Responsive design (stacked mobile, side-by-side desktop)
  */
 export default function BoletosPage() {
+  const datePickerRef = React.useRef<HTMLDivElement>(null)
+  const ticketSelectorRef = React.useRef<HTMLDivElement>(null)
+  const orderSummaryRef = React.useRef<HTMLDivElement>(null)
+  const infoCardsRef = React.useRef<HTMLDivElement>(null)
+
   // Initialize quantities with 0 for each ticket type
   const initialQuantities: TicketQuantities = React.useMemo(() => {
     return TICKET_TYPES.reduce((acc, ticket) => {
@@ -87,6 +138,46 @@ export default function BoletosPage() {
     )
   }
 
+  // Form sections sequential reveal animation
+  React.useEffect(() => {
+    if (prefersReducedMotion()) return
+
+    const ctx = gsap.context(() => {
+      if (datePickerRef.current) {
+        gsap.from(datePickerRef.current, {
+          y: 30,
+          opacity: 0,
+          duration: 0.6,
+          delay: 0.3,
+          ease: 'power3.out',
+        })
+      }
+      if (ticketSelectorRef.current) {
+        gsap.from(ticketSelectorRef.current, {
+          y: 30,
+          opacity: 0,
+          duration: 0.6,
+          delay: 0.5,
+          ease: 'power3.out',
+        })
+      }
+      if (orderSummaryRef.current) {
+        gsap.from(orderSummaryRef.current, {
+          x: 40,
+          opacity: 0,
+          duration: 0.6,
+          delay: 0.7,
+          ease: 'power3.out',
+        })
+      }
+    })
+
+    return () => ctx.revert()
+  }, [])
+
+  // Info cards stagger reveal
+  useStaggerReveal(infoCardsRef, '[data-info-card]', { y: 30, stagger: 0.1 })
+
   return (
     <PageLayout>
       <SEOHead
@@ -103,22 +194,27 @@ export default function BoletosPage() {
         ]}
       />
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <Breadcrumb items={[{ label: 'Boletos' }]} />
-
-        {/* Page Hero */}
-        <div className="mt-8 mb-12">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-            Comprar Boletos
-          </h1>
-          <p className="mt-4 text-lg text-muted-foreground max-w-2xl">
-            Adquiere tus boletos en línea y evita filas. Selecciona la fecha de
-            tu visita y el tipo de boleto que necesitas.
-          </p>
+      {/* Light Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#8DC63F]/10 via-[#8DC63F]/5 to-white py-16 sm:py-20">
+        <TicketSVG />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl">
+            <TextClipReveal>
+              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+                Comprar Boletos
+              </h1>
+            </TextClipReveal>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Adquiere tus boletos en línea y evita filas. Selecciona la fecha de
+              tu visita y el tipo de boleto que necesitas.
+            </p>
+          </div>
         </div>
+      </section>
 
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Form */}
-        <form 
+        <form
           onSubmit={handleSubmit(onSubmit)}
           aria-label="Formulario de compra de boletos"
         >
@@ -126,38 +222,42 @@ export default function BoletosPage() {
             {/* Left column: Date picker + Ticket selector */}
             <div className="lg:col-span-2 space-y-6">
               {/* Date Picker */}
-              <Controller
-                name="selectedDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    selectedDate={field.value || null}
-                    onDateSelect={(date) => field.onChange(date)}
-                  />
-                )}
-              />
+              <div ref={datePickerRef}>
+                <Controller
+                  name="selectedDate"
+                  control={control}
+                  render={({ field }) => (
+                    <DatePicker
+                      selectedDate={field.value || null}
+                      onDateSelect={(date) => field.onChange(date)}
+                    />
+                  )}
+                />
+              </div>
 
               {/* Ticket Selector */}
-              <Controller
-                name="quantities"
-                control={control}
-                render={({ field }) => (
-                  <TicketSelector
-                    quantities={field.value}
-                    onQuantityChange={(ticketId, quantity) => {
-                      field.onChange({
-                        ...field.value,
-                        [ticketId]: quantity,
-                      })
-                    }}
-                    isSunday={isSunday}
-                  />
-                )}
-              />
+              <div ref={ticketSelectorRef}>
+                <Controller
+                  name="quantities"
+                  control={control}
+                  render={({ field }) => (
+                    <TicketSelector
+                      quantities={field.value}
+                      onQuantityChange={(ticketId, quantity) => {
+                        field.onChange({
+                          ...field.value,
+                          [ticketId]: quantity,
+                        })
+                      }}
+                      isSunday={isSunday}
+                    />
+                  )}
+                />
+              </div>
             </div>
 
             {/* Right column: Order Summary (sticky) */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1" ref={orderSummaryRef}>
               <div className="lg:sticky lg:top-24">
                 <OrderSummary
                   selectedDate={selectedDate || null}
@@ -172,26 +272,32 @@ export default function BoletosPage() {
         </form>
 
         {/* Additional info section */}
-        <section 
+        <section
           className="mt-16 border-t border-border pt-12"
           aria-labelledby="info-heading"
         >
           <h2 id="info-heading" className="text-2xl font-bold mb-6">
             Información Importante
           </h2>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <InfoCard
-              title="Horario"
-              description="Martes a domingo de 10:00 a 18:00 hrs. Lunes cerrado."
-            />
-            <InfoCard
-              title="Descuentos"
-              description="Estudiantes, maestros y adultos mayores con credencial vigente."
-            />
-            <InfoCard
-              title="Domingos Gratuitos"
-              description="Entrada gratuita para nacionales mexicanos todos los domingos."
-            />
+          <div ref={infoCardsRef} className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div data-info-card>
+              <InfoCard
+                title="Horario"
+                description="Martes a domingo de 10:00 a 18:00 hrs. Lunes cerrado."
+              />
+            </div>
+            <div data-info-card>
+              <InfoCard
+                title="Descuentos"
+                description="Estudiantes, maestros y adultos mayores con credencial vigente."
+              />
+            </div>
+            <div data-info-card>
+              <InfoCard
+                title="Domingos Gratuitos"
+                description="Entrada gratuita para nacionales mexicanos todos los domingos."
+              />
+            </div>
           </div>
         </section>
       </div>

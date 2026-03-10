@@ -6,9 +6,9 @@
 
 import * as React from 'react'
 import { Calendar, Sparkles } from 'lucide-react'
+import gsap from 'gsap'
 
 import { PageLayout } from '@/components/layout'
-import { Breadcrumb } from '@/components/ui/breadcrumb'
 import { SEOHead, StructuredData } from '@/components/seo'
 import {
   EventCalendar,
@@ -23,8 +23,18 @@ import {
 import { EVENT_CATEGORIES } from '@/lib/types/events'
 import type { EventCategory } from '@/lib/types/events'
 import { cn } from '@/lib/utils'
+import {
+  GrainOverlay,
+  TextClipReveal,
+  AnimatedCounter,
+  useStaggerReveal,
+} from '@/components/ui/gsap-primitives'
 
 type CategoryFilter = EventCategory | 'todos'
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
 
 export default function ActividadesPage() {
   const [selectedCategory, setSelectedCategory] =
@@ -33,6 +43,14 @@ export default function ActividadesPage() {
   const [calendarView, setCalendarView] = React.useState<'calendar' | 'list'>(
     'calendar'
   )
+
+  // Refs for animations
+  const featuredCardRef = React.useRef<HTMLDivElement>(null)
+  const tabRowRef = React.useRef<HTMLDivElement>(null)
+  const underlineRef = React.useRef<HTMLSpanElement>(null)
+  const tabButtonRefs = React.useRef<Map<string, HTMLButtonElement>>(new Map())
+  const cardsGridRef = React.useRef<HTMLDivElement>(null)
+  const featuredGridRef = React.useRef<HTMLDivElement>(null)
 
   // Get featured event for hero
   const featuredEvents = getFeaturedEvents()
@@ -64,6 +82,65 @@ export default function ActividadesPage() {
     })),
   ]
 
+  // Hero featured card slide-in animation
+  React.useEffect(() => {
+    if (prefersReducedMotion() || !featuredCardRef.current) return
+
+    const ctx = gsap.context(() => {
+      gsap.from(featuredCardRef.current, {
+        x: 60,
+        opacity: 0,
+        duration: 0.8,
+        delay: 0.8,
+        ease: 'power3.out',
+      })
+    })
+
+    return () => ctx.revert()
+  }, [])
+
+  // Animated underline for category tabs
+  React.useEffect(() => {
+    if (prefersReducedMotion() || !underlineRef.current) return
+
+    const activeBtn = tabButtonRefs.current.get(selectedCategory)
+    if (!activeBtn || !tabRowRef.current) return
+
+    const rowRect = tabRowRef.current.getBoundingClientRect()
+    const btnRect = activeBtn.getBoundingClientRect()
+    const offsetLeft = btnRect.left - rowRect.left
+
+    gsap.to(underlineRef.current, {
+      x: offsetLeft,
+      width: btnRect.width,
+      duration: 0.3,
+      ease: 'power2.out',
+    })
+  }, [selectedCategory])
+
+  // Cards entrance animation on category/date change
+  React.useEffect(() => {
+    if (prefersReducedMotion() || !cardsGridRef.current) return
+
+    const ctx = gsap.context(() => {
+      const cards = cardsGridRef.current?.querySelectorAll('[data-event-card]')
+      if (!cards || cards.length === 0) return
+
+      gsap.from(cards, {
+        y: 30,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.06,
+        ease: 'power3.out',
+      })
+    }, cardsGridRef)
+
+    return () => ctx.revert()
+  }, [selectedCategory, selectedDate, filteredEvents.length])
+
+  // Stagger reveal for featured events grid
+  useStaggerReveal(featuredGridRef, '[data-featured-card]', { y: 40, stagger: 0.1 })
+
   return (
     <PageLayout>
       <SEOHead
@@ -79,15 +156,18 @@ export default function ActividadesPage() {
           { name: 'Actividades', path: '/actividades' },
         ]}
       />
-      
+
       {/* Page Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/90">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+        <GrainOverlay opacity={0.04} />
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="max-w-3xl">
-            <h1 className="mb-4 font-display text-4xl font-bold text-primary-foreground sm:text-5xl lg:text-6xl">
-              Actividades y Programas
-            </h1>
+            <TextClipReveal>
+              <h1 className="mb-4 font-display text-4xl font-bold text-primary-foreground sm:text-5xl lg:text-6xl">
+                Actividades y Programas
+              </h1>
+            </TextClipReveal>
             <p className="text-lg text-primary-foreground/80 sm:text-xl">
               Talleres, conferencias, visitas guiadas y programas educativos para
               todas las edades. Descubre nuevas formas de explorar la energía y
@@ -96,7 +176,10 @@ export default function ActividadesPage() {
 
             {/* Featured Event Highlight */}
             {featuredEvent && (
-              <div className="mt-8 inline-flex items-center gap-3 rounded-lg bg-background/10 px-4 py-3 backdrop-blur-sm">
+              <div
+                ref={featuredCardRef}
+                className="mt-8 inline-flex items-center gap-3 rounded-lg bg-background/10 px-4 py-3 backdrop-blur-sm"
+              >
                 <Sparkles className="h-5 w-5 text-accent" />
                 <div>
                   <p className="text-sm font-medium text-primary-foreground/70">
@@ -114,14 +197,15 @@ export default function ActividadesPage() {
 
       {/* Main Content */}
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <Breadcrumb items={[{ label: 'Actividades' }]} className="mb-8" />
-
         {/* Category Filter Tabs */}
         <div className="mb-8">
-          <div className="flex flex-wrap gap-2">
+          <div ref={tabRowRef} className="relative flex flex-wrap gap-2">
             {categories.map((category) => (
               <button
                 key={category.value}
+                ref={(el) => {
+                  if (el) tabButtonRefs.current.set(category.value, el)
+                }}
                 onClick={() => {
                   setSelectedCategory(category.value)
                   setSelectedDate(null)
@@ -136,6 +220,13 @@ export default function ActividadesPage() {
                 {category.label}
               </button>
             ))}
+            {/* Animated underline indicator */}
+            <span
+              ref={underlineRef}
+              className="absolute -bottom-1 left-0 h-0.5 bg-[#8DC63F] rounded-full"
+              style={{ width: 0 }}
+              aria-hidden="true"
+            />
           </div>
         </div>
 
@@ -155,7 +246,7 @@ export default function ActividadesPage() {
             <div className="mt-6 grid grid-cols-2 gap-4">
               <div className="rounded-lg border border-border bg-card p-4 text-center">
                 <p className="text-3xl font-bold text-accent">
-                  {allUpcomingEvents.length}
+                  <AnimatedCounter end={allUpcomingEvents.length} />
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Próximos eventos
@@ -192,9 +283,11 @@ export default function ActividadesPage() {
             ) : (
               <>
                 {filteredEvents.length > 0 ? (
-                  <div className="grid gap-6 sm:grid-cols-2">
+                  <div ref={cardsGridRef} className="grid gap-6 sm:grid-cols-2">
                     {filteredEvents.map((event) => (
-                      <EventCard key={event.id} event={event} />
+                      <div key={event.id} data-event-card>
+                        <EventCard event={event} />
+                      </div>
                     ))}
                   </div>
                 ) : (
@@ -228,14 +321,16 @@ export default function ActividadesPage() {
 
         {/* Featured Events Section */}
         {featuredEvents.length > 1 && selectedCategory === 'todos' && !selectedDate && (
-          <section className="mt-16">
+          <section className="mt-16" ref={featuredGridRef}>
             <h2 className="mb-6 flex items-center gap-2 font-display text-2xl font-bold">
               <Sparkles className="h-6 w-6 text-accent" />
               Eventos Destacados
             </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {featuredEvents.map((event) => (
-                <EventCard key={event.id} event={event} />
+                <div key={event.id} data-featured-card>
+                  <EventCard event={event} />
+                </div>
               ))}
             </div>
           </section>

@@ -4,7 +4,10 @@
  * Based on PRD Section 5.6 - Actividades
  */
 
+import { useEffect, useRef } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
   Calendar,
   Clock,
@@ -18,19 +21,63 @@ import {
 } from 'lucide-react'
 
 import { PageLayout } from '@/components/layout'
-import { Breadcrumb } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import { EventRegistrationForm } from '@/components/activities/EventRegistrationForm'
 import { EventCard } from '@/components/activities/EventCard'
 import { getEventById, getEventsByCategory } from '@/lib/data/events'
 import { getCategoryLabel, getCategoryColor } from '@/lib/types/events'
 import { cn } from '@/lib/utils'
+import { TextClipReveal, MagneticWrap, useStaggerReveal } from '@/components/ui/gsap-primitives'
+
+gsap.registerPlugin(ScrollTrigger)
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
 
 export default function EventDetailPage() {
   const { eventId } = useParams<{ eventId: string }>()
   const navigate = useNavigate()
+  const pageRef = useRef<HTMLDivElement>(null)
+  const heroImageRef = useRef<HTMLDivElement>(null)
+  const sidebarRef = useRef<HTMLDivElement>(null)
+  const infoGridRef = useRef<HTMLDivElement>(null)
+  const relatedRef = useRef<HTMLDivElement>(null)
 
   const event = eventId ? getEventById(eventId) : undefined
+
+  // Hero image clip-path reveal
+  useEffect(() => {
+    if (!event || prefersReducedMotion()) return
+
+    const ctx = gsap.context(() => {
+      if (heroImageRef.current) {
+        gsap.from(heroImageRef.current, {
+          clipPath: 'inset(0 100% 0 0)',
+          duration: 1,
+          ease: 'power3.inOut',
+        })
+      }
+
+      if (sidebarRef.current) {
+        gsap.from(sidebarRef.current, {
+          x: 40,
+          opacity: 0,
+          duration: 0.6,
+          delay: 0.8,
+          ease: 'power3.out',
+        })
+      }
+    }, pageRef)
+
+    return () => ctx.revert()
+  }, [event])
+
+  // Info grid stagger
+  useStaggerReveal(infoGridRef, '.info-card', { y: 30, stagger: 0.1 })
+
+  // Related events stagger
+  useStaggerReveal(relatedRef, '.related-event-card', { y: 30, stagger: 0.1 })
 
   if (!event) {
     return (
@@ -40,7 +87,7 @@ export default function EventDetailPage() {
             <Calendar className="mb-4 h-16 w-16 text-muted-foreground/50" />
             <h1 className="mb-2 text-2xl font-bold">Evento no encontrado</h1>
             <p className="mb-6 text-muted-foreground">
-              El evento que buscas no existe o ya no está disponible.
+              El evento que buscas no existe o ya no esta disponible.
             </p>
             <Button variant="primary" asChild>
               <Link to="/actividades">Ver todas las actividades</Link>
@@ -78,7 +125,6 @@ export default function EventDetailPage() {
         console.log('Error sharing:', err)
       }
     } else {
-      // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href)
       alert('Enlace copiado al portapapeles')
     }
@@ -86,24 +132,18 @@ export default function EventDetailPage() {
 
   return (
     <PageLayout>
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <Breadcrumb
-          items={[
-            { label: 'Actividades', href: '/actividades' },
-            { label: event.title },
-          ]}
-        />
-
+      <div ref={pageRef} className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Back Button */}
         <div className="mt-4">
-          <button
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Volver
-          </button>
+          <MagneticWrap>
+            <button
+              onClick={() => navigate(-1)}
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Volver
+            </button>
+          </MagneticWrap>
         </div>
 
         {/* Main Content */}
@@ -111,7 +151,10 @@ export default function EventDetailPage() {
           {/* Left Column - Event Details */}
           <div className="lg:col-span-2">
             {/* Hero Image */}
-            <div className="relative mb-6 aspect-video overflow-hidden rounded-xl bg-gradient-to-br from-muted to-muted/80">
+            <div
+              ref={heroImageRef}
+              className="relative mb-6 aspect-video overflow-hidden rounded-xl bg-gradient-to-br from-muted to-muted/80"
+            >
               <div className="flex h-full items-center justify-center">
                 <Calendar className="h-24 w-24 text-muted-foreground/30" />
               </div>
@@ -138,17 +181,19 @@ export default function EventDetailPage() {
             </div>
 
             {/* Title & Description */}
-            <h1 className="mb-4 font-display text-3xl font-bold sm:text-4xl">
-              {event.title}
-            </h1>
+            <TextClipReveal delay={0.5}>
+              <h1 className="mb-4 font-display text-3xl font-bold sm:text-4xl">
+                {event.title}
+              </h1>
+            </TextClipReveal>
 
             <p className="mb-6 text-lg text-muted-foreground">
               {event.fullDescription}
             </p>
 
             {/* Event Info Grid */}
-            <div className="mb-8 grid gap-4 sm:grid-cols-2">
-              <div className="flex items-start gap-3 rounded-lg bg-muted/50 p-4">
+            <div ref={infoGridRef} className="mb-8 grid gap-4 sm:grid-cols-2">
+              <div className="info-card flex items-start gap-3 rounded-lg bg-muted/50 p-4">
                 <Calendar className="h-5 w-5 flex-shrink-0 text-accent" />
                 <div>
                   <p className="text-sm font-medium">Fecha</p>
@@ -156,7 +201,7 @@ export default function EventDetailPage() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 rounded-lg bg-muted/50 p-4">
+              <div className="info-card flex items-start gap-3 rounded-lg bg-muted/50 p-4">
                 <Clock className="h-5 w-5 flex-shrink-0 text-accent" />
                 <div>
                   <p className="text-sm font-medium">Horario</p>
@@ -166,15 +211,15 @@ export default function EventDetailPage() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 rounded-lg bg-muted/50 p-4">
+              <div className="info-card flex items-start gap-3 rounded-lg bg-muted/50 p-4">
                 <MapPin className="h-5 w-5 flex-shrink-0 text-accent" />
                 <div>
-                  <p className="text-sm font-medium">Ubicación</p>
+                  <p className="text-sm font-medium">Ubicacion</p>
                   <p className="text-muted-foreground">{event.location}</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 rounded-lg bg-muted/50 p-4">
+              <div className="info-card flex items-start gap-3 rounded-lg bg-muted/50 p-4">
                 <Users className="h-5 w-5 flex-shrink-0 text-accent" />
                 <div>
                   <p className="text-sm font-medium">Capacidad</p>
@@ -184,7 +229,7 @@ export default function EventDetailPage() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 rounded-lg bg-muted/50 p-4">
+              <div className="info-card flex items-start gap-3 rounded-lg bg-muted/50 p-4">
                 <Tag className="h-5 w-5 flex-shrink-0 text-accent" />
                 <div>
                   <p className="text-sm font-medium">Precio</p>
@@ -248,7 +293,7 @@ export default function EventDetailPage() {
 
           {/* Right Column - Registration Form */}
           <div className="lg:col-span-1">
-            <div className="sticky top-8">
+            <div ref={sidebarRef} className="sticky top-8">
               <EventRegistrationForm event={event} />
             </div>
           </div>
@@ -256,13 +301,15 @@ export default function EventDetailPage() {
 
         {/* Related Events */}
         {relatedEvents.length > 0 && (
-          <div className="mt-16">
+          <div ref={relatedRef} className="mt-16">
             <h2 className="mb-6 font-display text-2xl font-bold">
-              Más {getCategoryLabel(event.category)}s
+              Mas {getCategoryLabel(event.category)}s
             </h2>
             <div className="grid gap-6 sm:grid-cols-2">
               {relatedEvents.map((relatedEvent) => (
-                <EventCard key={relatedEvent.id} event={relatedEvent} />
+                <div key={relatedEvent.id} className="related-event-card">
+                  <EventCard event={relatedEvent} />
+                </div>
               ))}
             </div>
           </div>

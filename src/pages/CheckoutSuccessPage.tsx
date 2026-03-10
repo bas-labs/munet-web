@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import gsap from 'gsap'
 import { PageLayout } from '@/components/layout'
 import { Button } from '@/components/ui/button'
-import { CheckCircle, Download, Home, Ticket } from 'lucide-react'
+import { Download, Home, Ticket } from 'lucide-react'
 
 interface OrderDetails {
   orderId: string
@@ -12,18 +13,26 @@ interface OrderDetails {
   qrCode: string
 }
 
+function prefersReducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
 export default function CheckoutSuccessPage() {
   const [searchParams] = useSearchParams()
   const sessionId = searchParams.get('session_id')
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  const containerRef = useRef<HTMLDivElement>(null)
+  const loadingCircleRef = useRef<SVGCircleElement>(null)
+  const checkmarkRef = useRef<SVGPolylineElement>(null)
+  const orderCardRef = useRef<HTMLDivElement>(null)
+  const qrRef = useRef<HTMLDivElement>(null)
+  const confettiContainerRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
-    // In a real implementation, you would fetch order details from the API
-    // using the session_id. For now, we show a generic success message.
     const timer = setTimeout(() => {
       setIsLoading(false)
-      // Mock order details for display
       if (sessionId) {
         setOrderDetails({
           orderId: sessionId.slice(0, 8).toUpperCase(),
@@ -38,20 +47,146 @@ export default function CheckoutSuccessPage() {
     return () => clearTimeout(timer)
   }, [sessionId])
 
+  // Loading circle animation
+  useEffect(() => {
+    if (!isLoading || !loadingCircleRef.current) return
+    if (prefersReducedMotion()) return
+
+    const ctx = gsap.context(() => {
+      gsap.to(loadingCircleRef.current, {
+        strokeDashoffset: 0,
+        duration: 1.5,
+        ease: 'power2.inOut',
+        repeat: -1,
+      })
+    })
+
+    return () => ctx.revert()
+  }, [isLoading])
+
+  // Success animations - fire after state transition
+  useEffect(() => {
+    if (isLoading || !orderDetails) return
+    if (prefersReducedMotion()) return
+
+    const ctx = gsap.context(() => {
+      // Checkmark stroke draw
+      if (checkmarkRef.current) {
+        const length = checkmarkRef.current.getTotalLength()
+        gsap.set(checkmarkRef.current, {
+          strokeDasharray: length,
+          strokeDashoffset: length,
+        })
+        gsap.to(checkmarkRef.current, {
+          strokeDashoffset: 0,
+          duration: 0.8,
+          delay: 0.2,
+          ease: 'power2.out',
+        })
+      }
+
+      // Order card fade up
+      if (orderCardRef.current) {
+        gsap.from(orderCardRef.current, {
+          y: 30,
+          opacity: 0,
+          duration: 0.6,
+          delay: 0.9,
+        })
+      }
+
+      // QR / access code section scale in
+      if (qrRef.current) {
+        gsap.from(qrRef.current, {
+          scale: 0,
+          duration: 0.5,
+          delay: 1.2,
+          ease: 'back.out(1.5)',
+        })
+      }
+
+      // Confetti burst
+      if (confettiContainerRef.current) {
+        const colors = ['#8DC63F', '#FFD700', '#8DC63F', '#FFD700']
+        const pieces: HTMLDivElement[] = []
+
+        for (let i = 0; i < 20; i++) {
+          const piece = document.createElement('div')
+          piece.style.position = 'absolute'
+          piece.style.width = '8px'
+          piece.style.height = '8px'
+          piece.style.borderRadius = '1px'
+          piece.style.backgroundColor = colors[i % colors.length]
+          piece.style.left = '50%'
+          piece.style.top = '50%'
+          piece.style.transform = 'translate(-50%, -50%)'
+          confettiContainerRef.current.appendChild(piece)
+          pieces.push(piece)
+        }
+
+        gsap.to(pieces, {
+          x: () => gsap.utils.random(-200, 200),
+          y: () => gsap.utils.random(-200, 200),
+          rotation: () => gsap.utils.random(0, 360),
+          opacity: 0,
+          duration: 1,
+          stagger: 0.02,
+          delay: 0.5,
+          ease: 'power2.out',
+          onComplete: () => {
+            pieces.forEach((p) => p.remove())
+          },
+        })
+      }
+    }, containerRef)
+
+    return () => ctx.revert()
+  }, [isLoading, orderDetails])
+
   return (
     <PageLayout>
-      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
+      <div ref={containerRef} className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-12">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+              <svg width="50" height="50" viewBox="0 0 50 50" className="rotate-[-90deg]">
+                <circle
+                  ref={loadingCircleRef}
+                  cx="25"
+                  cy="25"
+                  r="20"
+                  fill="none"
+                  stroke="#8DC63F"
+                  strokeWidth={3}
+                  strokeDasharray={126}
+                  strokeDashoffset={126}
+                  strokeLinecap="round"
+                />
+              </svg>
               <p className="mt-4 text-muted-foreground">Procesando tu compra...</p>
             </div>
           ) : (
             <>
-              {/* Success Icon */}
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
-                <CheckCircle className="h-12 w-12 text-green-600" />
+              {/* Animated Checkmark Icon */}
+              <div className="relative mx-auto flex h-20 w-20 items-center justify-center">
+                <div
+                  ref={confettiContainerRef}
+                  className="pointer-events-none absolute inset-0 overflow-visible"
+                  aria-hidden="true"
+                />
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <polyline
+                      ref={checkmarkRef}
+                      points="10,20 18,28 30,12"
+                      fill="none"
+                      stroke="#8DC63F"
+                      strokeWidth={3}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
               </div>
 
               {/* Success Message */}
@@ -64,9 +199,9 @@ export default function CheckoutSuccessPage() {
 
               {/* Order Details Card */}
               {orderDetails && (
-                <div className="mt-8 rounded-lg border border-border bg-card p-6 text-left">
+                <div ref={orderCardRef} className="mt-8 rounded-lg border border-border bg-card p-6 text-left">
                   <h2 className="text-lg font-semibold">Detalles de tu pedido</h2>
-                  
+
                   <dl className="mt-4 space-y-3 text-sm">
                     <div className="flex justify-between">
                       <dt className="text-muted-foreground">Número de orden</dt>
@@ -85,7 +220,7 @@ export default function CheckoutSuccessPage() {
                   </dl>
 
                   {/* QR Code / Access Code */}
-                  <div className="mt-6 rounded-md bg-muted p-4 text-center">
+                  <div ref={qrRef} className="mt-6 rounded-md bg-muted p-4 text-center">
                     <p className="text-xs text-muted-foreground">CÓDIGO DE ACCESO</p>
                     <p className="mt-1 font-mono text-xl font-bold tracking-wider text-primary">
                       {orderDetails.qrCode}

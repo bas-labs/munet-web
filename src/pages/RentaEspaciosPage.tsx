@@ -5,19 +5,103 @@
  */
 
 import * as React from 'react'
+import { useEffect, useRef } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { PageLayout } from '@/components/layout'
-import { Breadcrumb } from '@/components/ui/breadcrumb'
 import { SEOHead, StructuredData } from '@/components/seo'
 import { Button } from '@/components/ui/button'
 import { SpaceCard, SpaceDetail, InquiryForm } from '@/components/spaces'
 import { SPACES } from '@/lib/data/spaces'
 import type { Space } from '@/lib/types/spaces'
+import {
+  GrainOverlay,
+  AmbientGlow,
+  TextClipReveal,
+  MagneticWrap,
+  TiltCard,
+  SectionReveal,
+  useStaggerReveal,
+} from '@/components/ui/gsap-primitives'
+
+gsap.registerPlugin(ScrollTrigger)
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
 
 export default function RentaEspaciosPage() {
   const [selectedSpace, setSelectedSpace] = React.useState<Space | null>(null)
   const [isDetailOpen, setIsDetailOpen] = React.useState(false)
   const [isFormOpen, setIsFormOpen] = React.useState(false)
   const [preselectedSpaceId, setPreselectedSpaceId] = React.useState<string>('')
+
+  const heroRef = useRef<HTMLElement>(null)
+  const spacesGridRef = useRef<HTMLDivElement>(null)
+  const featuresRef = useRef<HTMLElement>(null)
+
+  // Hero parallax on gradient blobs
+  useEffect(() => {
+    if (prefersReducedMotion()) return
+
+    const ctx = gsap.context(() => {
+      const blobs = heroRef.current?.querySelectorAll('.hero-blob')
+      if (!blobs) return
+
+      blobs.forEach((blob) => {
+        gsap.to(blob, {
+          yPercent: -10,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        })
+      })
+    }, heroRef)
+
+    return () => ctx.revert()
+  }, [])
+
+  // Space cards stagger
+  useStaggerReveal(spacesGridRef, '.space-card', { y: 40, stagger: 0.1 })
+
+  // Features stagger
+  useEffect(() => {
+    if (prefersReducedMotion()) return
+
+    const ctx = gsap.context(() => {
+      gsap.from('.feature-item', {
+        x: -30,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: featuresRef.current,
+          start: 'top 85%',
+          once: true,
+        },
+      })
+
+      gsap.from('.feature-check', {
+        scale: 0,
+        duration: 0.4,
+        stagger: 0.1,
+        delay: 0.3,
+        ease: 'back.out(2)',
+        scrollTrigger: {
+          trigger: featuresRef.current,
+          start: 'top 85%',
+          once: true,
+        },
+      })
+    }, featuresRef)
+
+    return () => ctx.revert()
+  }, [])
 
   // Open space detail panel
   const handleSpaceSelect = (space: Space) => {
@@ -54,7 +138,7 @@ export default function RentaEspaciosPage() {
     <PageLayout>
       <SEOHead
         title="Renta de Espacios"
-        description="Renta espacios únicos en MUNET para tu evento. Auditorio, salas, talleres, foro al aire libre y explanada. Arquitectura de Enrique Norten en Chapultepec."
+        description="Renta espacios unicos en MUNET para tu evento. Auditorio, salas, talleres, foro al aire libre y explanada. Arquitectura de Enrique Norten en Chapultepec."
         canonicalPath="/renta-de-espacios"
         keywords={['renta espacios CDMX', 'eventos corporativos', 'venue Chapultepec', 'auditorio museo']}
       />
@@ -67,42 +151,39 @@ export default function RentaEspaciosPage() {
       />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-primary text-primary-foreground">
-        {/* Background Image Placeholder */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary/80">
-          {/* Background pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <defs>
-                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                  <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                </pattern>
-              </defs>
-              <rect width="100" height="100" fill="url(#grid)" />
-            </svg>
-          </div>
-        </div>
+      <section ref={heroRef} className="relative overflow-hidden bg-[#09090B]">
+        <GrainOverlay />
+        <AmbientGlow position="top-right" />
+        <AmbientGlow position="bottom-left" color="#8DC63F" opacity={0.05} />
+
+        {/* Gradient blobs for parallax */}
+        <div className="hero-blob absolute -top-32 -right-32 h-96 w-96 rounded-full bg-[#8DC63F]/10 blur-[120px]" aria-hidden="true" />
+        <div className="hero-blob absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-[#8DC63F]/5 blur-[100px]" aria-hidden="true" />
 
         <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
           <div className="max-w-3xl">
-            <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Renta de Espacios
-            </h1>
-            <p className="mt-6 text-xl leading-relaxed text-primary-foreground/80 sm:text-2xl">
-              Haz de tu evento algo extraordinario en un espacio único
+            <TextClipReveal>
+              <h1 className="font-display text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Renta de Espacios
+              </h1>
+            </TextClipReveal>
+            <p className="mt-6 text-xl leading-relaxed text-white/80 sm:text-2xl">
+              Haz de tu evento algo extraordinario en un espacio unico
             </p>
-            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-primary-foreground/60">
-              Descubre nuestros espacios diseñados para crear experiencias memorables en el 
-              corazón del Bosque de Chapultepec, con la arquitectura icónica de MUNET como telón de fondo.
+            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-white/60">
+              Descubre nuestros espacios disenados para crear experiencias memorables en el
+              corazon del Bosque de Chapultepec, con la arquitectura iconica de MUNET como telon de fondo.
             </p>
             <div className="mt-10">
-              <Button
-                variant="primary"
-                size="xl"
-                onClick={handleOpenGeneralInquiry}
-              >
-                Solicitar Cotización
-              </Button>
+              <MagneticWrap>
+                <Button
+                  variant="primary"
+                  size="xl"
+                  onClick={handleOpenGeneralInquiry}
+                >
+                  Solicitar Cotizacion
+                </Button>
+              </MagneticWrap>
             </div>
           </div>
         </div>
@@ -111,74 +192,70 @@ export default function RentaEspaciosPage() {
       {/* Spaces Section */}
       <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Breadcrumb
-            items={[{ label: 'Renta de Espacios' }]}
-            className="mb-8"
-          />
-
           {/* Section Header */}
           <div className="mb-12 max-w-2xl">
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
               Nuestros Espacios
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Cinco espacios versátiles para todo tipo de eventos, desde conferencias 
-              íntimas hasta festivales al aire libre.
+              Cinco espacios versatiles para todo tipo de eventos, desde conferencias
+              intimas hasta festivales al aire libre.
             </p>
           </div>
 
           {/* Space Cards Grid */}
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div ref={spacesGridRef} className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {SPACES.map((space) => (
-              <SpaceCard
-                key={space.id}
-                space={space}
-                onSelect={handleSpaceSelect}
-              />
+              <TiltCard key={space.id} className="space-card">
+                <SpaceCard
+                  space={space}
+                  onSelect={handleSpaceSelect}
+                />
+              </TiltCard>
             ))}
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="border-t border-border bg-muted/30 py-16 sm:py-24">
+      <section ref={featuresRef} className="border-t border-border bg-muted/30 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
             {/* Left: Text Content */}
             <div>
               <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-                ¿Por qué elegir MUNET?
+                Por que elegir MUNET?
               </h2>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-                MUNET ofrece una experiencia única para eventos, combinando arquitectura 
-                de clase mundial con tecnología de vanguardia y un entorno natural incomparable.
+                MUNET ofrece una experiencia unica para eventos, combinando arquitectura
+                de clase mundial con tecnologia de vanguardia y un entorno natural incomparable.
               </p>
 
               <ul className="mt-10 space-y-6">
                 {[
                   {
-                    title: 'Arquitectura Icónica',
+                    title: 'Arquitectura Iconica',
                     description:
-                      'Diseñado por Enrique Norten, MUNET es una obra maestra arquitectónica que impresionará a tus invitados.',
+                      'Disenado por Enrique Norten, MUNET es una obra maestra arquitectonica que impresionara a tus invitados.',
                   },
                   {
-                    title: 'Ubicación Privilegiada',
+                    title: 'Ubicacion Privilegiada',
                     description:
-                      'En el corazón del Bosque de Chapultepec, con fácil acceso y estacionamiento amplio.',
+                      'En el corazon del Bosque de Chapultepec, con facil acceso y estacionamiento amplio.',
                   },
                   {
                     title: 'Equipamiento Profesional',
                     description:
-                      'Audio, video, iluminación y conectividad de última generación en todos nuestros espacios.',
+                      'Audio, video, iluminacion y conectividad de ultima generacion en todos nuestros espacios.',
                   },
                   {
                     title: 'Equipo de Eventos',
                     description:
-                      'Personal capacitado para asistirte en la planificación y ejecución de tu evento.',
+                      'Personal capacitado para asistirte en la planificacion y ejecucion de tu evento.',
                   },
                 ].map((feature) => (
-                  <li key={feature.title} className="flex gap-4">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
+                  <li key={feature.title} className="feature-item flex gap-4">
+                    <div className="feature-check flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
                       <svg
                         className="h-4 w-4"
                         fill="none"
@@ -230,36 +307,42 @@ export default function RentaEspaciosPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-accent to-accent/80 px-6 py-16 text-center shadow-2xl sm:px-16 sm:py-24">
-            <h2 className="font-display text-3xl font-bold tracking-tight text-accent-foreground sm:text-4xl">
-              ¿Listo para crear algo extraordinario?
-            </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-accent-foreground/80">
-              Nuestro equipo está listo para ayudarte a planificar el evento perfecto. 
-              Contáctanos hoy y recibe una cotización personalizada.
-            </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button
-                variant="secondary"
-                size="xl"
-                onClick={handleOpenGeneralInquiry}
-              >
-                Solicitar Cotización
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-accent-foreground/20 text-accent-foreground hover:bg-accent-foreground/10"
-                asChild
-              >
-                <a href="tel:+525512345678">Llamar: 55 1234 5678</a>
-              </Button>
+      <SectionReveal direction="diagonal">
+        <section className="py-16 sm:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-accent to-accent/80 px-6 py-16 text-center shadow-2xl sm:px-16 sm:py-24">
+              <h2 className="font-display text-3xl font-bold tracking-tight text-accent-foreground sm:text-4xl">
+                Listo para crear algo extraordinario?
+              </h2>
+              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-accent-foreground/80">
+                Nuestro equipo esta listo para ayudarte a planificar el evento perfecto.
+                Contactanos hoy y recibe una cotizacion personalizada.
+              </p>
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <MagneticWrap>
+                  <Button
+                    variant="secondary"
+                    size="xl"
+                    onClick={handleOpenGeneralInquiry}
+                  >
+                    Solicitar Cotizacion
+                  </Button>
+                </MagneticWrap>
+                <MagneticWrap>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="border-accent-foreground/20 text-accent-foreground hover:bg-accent-foreground/10"
+                    asChild
+                  >
+                    <a href="tel:+525512345678">Llamar: 55 1234 5678</a>
+                  </Button>
+                </MagneticWrap>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </SectionReveal>
 
       {/* Space Detail Panel */}
       {selectedSpace && (

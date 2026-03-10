@@ -1,36 +1,10 @@
 import { Link } from 'react-router-dom'
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { MagneticWrap, GrainOverlay, AmbientGlow } from '@/components/ui/gsap-primitives'
 
 gsap.registerPlugin(ScrollTrigger)
-
-/* ─── Magnetic Button ─── */
-function MagneticButton({ children }: { children: React.ReactNode }) {
-  const btnRef = useRef<HTMLDivElement>(null)
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    const el = btnRef.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    const x = e.clientX - rect.left - rect.width / 2
-    const y = e.clientY - rect.top - rect.height / 2
-    gsap.to(el, { x: x * 0.2, y: y * 0.2, duration: 0.3, ease: 'power2.out' })
-  }, [])
-
-  const handleMouseLeave = useCallback(() => {
-    if (btnRef.current) gsap.to(btnRef.current, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' })
-  }, [])
-
-  return (
-    <div ref={btnRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} className="inline-block">
-      {children}
-    </div>
-  )
-}
-
-/* ─── Noise texture data URI ─── */
-const NOISE_SVG = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
 
 /* ─── Hero Section ─── */
 export default function HeroSection() {
@@ -125,23 +99,10 @@ export default function HeroSection() {
       className="relative h-[100dvh] min-h-[700px] flex items-end overflow-hidden bg-[#09090B]"
     >
       {/* Grain texture overlay */}
-      <div
-        className="pointer-events-none absolute inset-0 z-[2]"
-        style={{
-          backgroundImage: NOISE_SVG,
-          opacity: 0.03,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '256px 256px',
-        }}
-        aria-hidden="true"
-      />
+      <GrainOverlay />
 
       {/* Ambient gradient glow */}
-      <div
-        className="pointer-events-none absolute top-[15%] right-[10%] w-[800px] h-[800px] rounded-full blur-[200px] z-0"
-        style={{ background: 'radial-gradient(circle, rgba(141,198,63,0.08) 0%, transparent 70%)' }}
-        aria-hidden="true"
-      />
+      <AmbientGlow />
 
       {/* Content */}
       <div className="hero-content-wrap relative z-10 w-full">
@@ -207,7 +168,7 @@ export default function HeroSection() {
 
               {/* CTAs */}
               <div className="flex flex-col min-[480px]:flex-row items-center gap-5">
-                <MagneticButton>
+                <MagneticWrap>
                   <div className="hero-cta">
                     <Link
                       to="/boletos"
@@ -216,8 +177,8 @@ export default function HeroSection() {
                       Comprar Boletos
                     </Link>
                   </div>
-                </MagneticButton>
-                <MagneticButton>
+                </MagneticWrap>
+                <MagneticWrap>
                   <div className="hero-cta">
                     <Link
                       to="/exposiciones"
@@ -229,7 +190,7 @@ export default function HeroSection() {
                       </span>
                     </Link>
                   </div>
-                </MagneticButton>
+                </MagneticWrap>
               </div>
             </div>
 
@@ -259,7 +220,7 @@ export default function HeroSection() {
       </div>
 
       {/* Dark-to-light transition at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent z-20 pointer-events-none" aria-hidden="true" />
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white/80 to-transparent z-[1] pointer-events-none" aria-hidden="true" />
     </section>
   )
 }

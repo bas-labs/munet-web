@@ -4,6 +4,8 @@
  * Based on PRD Section 5.11 - Contacto
  */
 
+import { useEffect, useRef } from 'react'
+import gsap from 'gsap'
 import {
   Mail,
   MapPin,
@@ -15,10 +17,17 @@ import {
   ExternalLink,
 } from 'lucide-react'
 import { PageLayout } from '@/components/layout'
-import { Breadcrumb } from '@/components/ui/breadcrumb'
 import { SEOHead, StructuredData } from '@/components/seo'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { ContactForm } from '@/components/contact'
+import {
+  GrainOverlay,
+  AmbientGlow,
+  TextClipReveal,
+  SectionReveal,
+  MagneticWrap,
+  useStaggerReveal,
+} from '@/components/ui/gsap-primitives'
 
 // TikTok icon (not in lucide-react)
 const TikTokIcon = ({ className }: { className?: string }) => (
@@ -85,6 +94,30 @@ const SOCIAL_LINKS = [
 ]
 
 export default function ContactoPage() {
+  const heroRef = useRef<HTMLDivElement>(null)
+  const infoCardsRef = useRef<HTMLDivElement>(null)
+
+  // Animated concentric pulse circles
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const ctx = gsap.context(() => {
+      gsap.to('.pulse-circle', {
+        scale: 2,
+        opacity: 0,
+        duration: 2.5,
+        stagger: 0.6,
+        repeat: -1,
+        ease: 'power1.out',
+      })
+    }, heroRef)
+
+    return () => ctx.revert()
+  }, [])
+
+  // Stagger reveal for info cards
+  useStaggerReveal(infoCardsRef, '.info-card', { y: 30, stagger: 0.1 })
+
   return (
     <PageLayout>
       <SEOHead
@@ -101,23 +134,51 @@ export default function ContactoPage() {
         ]}
       />
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 py-20 text-primary-foreground">
-        <div className="absolute inset-0 bg-[url('/images/pattern-energy.svg')] opacity-10" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Breadcrumb
-            items={[{ label: 'Contacto' }]}
-            className="mb-8 text-primary-foreground/70"
-          />
+      {/* Dark Hero */}
+      <section ref={heroRef} className="relative overflow-hidden bg-[#09090B] pb-28 pt-12">
+        <GrainOverlay />
+        <AmbientGlow position="top-right" />
+
+        {/* Animated concentric pulse circles */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true">
+          {[0, 1, 2].map((i) => (
+            <svg
+              key={i}
+              className="pulse-circle absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              width="200"
+              height="200"
+              viewBox="0 0 200 200"
+              style={{ scale: 0.5, opacity: 0.3 }}
+            >
+              <circle
+                cx="100"
+                cy="100"
+                r="90"
+                fill="none"
+                stroke="#8DC63F"
+                strokeWidth="1"
+              />
+            </svg>
+          ))}
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Contacto
-            </h1>
-            <p className="mt-6 text-xl text-primary-foreground/80 sm:text-2xl">
-              ¿Tienes preguntas? Estamos aquí para ayudarte.
-            </p>
+            <TextClipReveal>
+              <h1 className="font-display text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Contacto
+              </h1>
+            </TextClipReveal>
+            <TextClipReveal delay={0.3}>
+              <p className="mt-6 text-xl text-white/70 sm:text-2xl">
+                ¿Tienes preguntas? Estamos aquí para ayudarte.
+              </p>
+            </TextClipReveal>
           </div>
         </div>
+
+        {/* Dark-to-white gradient */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white/80 to-transparent z-[1] pointer-events-none" />
       </section>
 
       {/* Main Content */}
@@ -129,9 +190,9 @@ export default function ContactoPage() {
           </div>
 
           {/* Right Column: Contact Info, Map, Socials */}
-          <div className="space-y-8">
+          <div ref={infoCardsRef} className="space-y-8">
             {/* General Contact Info */}
-            <Card variant="default">
+            <Card variant="default" className="info-card">
               <CardHeader>
                 <CardTitle>Información de Contacto</CardTitle>
               </CardHeader>
@@ -204,7 +265,7 @@ export default function ContactoPage() {
             </Card>
 
             {/* Department Contacts */}
-            <Card variant="default">
+            <Card variant="default" className="info-card">
               <CardHeader>
                 <CardTitle>Contacto por Departamento</CardTitle>
               </CardHeader>
@@ -232,67 +293,70 @@ export default function ContactoPage() {
             </Card>
 
             {/* Map */}
-            <Card variant="default" className="overflow-hidden">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  Ubicación
-                  <a
-                    href="https://maps.google.com/?q=Museo+Nacional+de+Energia+y+Tecnologia+MUNET"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm font-normal text-accent hover:underline"
-                  >
-                    Ver en Google Maps
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                {/* Google Maps Embed Placeholder */}
-                <div className="relative aspect-video w-full bg-muted">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.661234567890!2d-99.21234567890123!3d19.42345678901234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sBosque+de+Chapultepec!5e0!3m2!1ses!2smx!4v1234567890"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0, minHeight: 250 }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Ubicación de MUNET"
-                    className="absolute inset-0"
-                  />
-                  {/* Fallback if iframe doesn't load */}
-                  <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                    <div className="text-center">
-                      <MapPin className="mx-auto h-12 w-12 text-muted-foreground" />
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Bosque de Chapultepec II Secc.
-                      </p>
+            <SectionReveal direction="bottom" triggerStart="top 90%">
+              <Card variant="default" className="overflow-hidden">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    Ubicación
+                    <a
+                      href="https://maps.google.com/?q=Museo+Nacional+de+Energia+y+Tecnologia+MUNET"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm font-normal text-accent hover:underline"
+                    >
+                      Ver en Google Maps
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  {/* Google Maps Embed Placeholder */}
+                  <div className="relative aspect-video w-full bg-muted">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.661234567890!2d-99.21234567890123!3d19.42345678901234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sBosque+de+Chapultepec!5e0!3m2!1ses!2smx!4v1234567890"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0, minHeight: 250 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="Ubicación de MUNET"
+                      className="absolute inset-0"
+                    />
+                    {/* Fallback if iframe doesn't load */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-muted">
+                      <div className="text-center">
+                        <MapPin className="mx-auto h-12 w-12 text-muted-foreground" />
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          Bosque de Chapultepec II Secc.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </SectionReveal>
 
             {/* Social Media */}
-            <Card variant="default">
+            <Card variant="default" className="info-card">
               <CardHeader>
                 <CardTitle>Síguenos en Redes</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-center gap-4 sm:justify-start">
                   {SOCIAL_LINKS.map((social, index) => (
-                    <a
-                      key={index}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-background text-muted-foreground transition-all hover:border-accent/50 hover:shadow-md ${social.color}`}
-                      title={social.name}
-                      aria-label={`Síguenos en ${social.name}`}
-                    >
-                      <social.icon className="h-5 w-5" />
-                    </a>
+                    <MagneticWrap key={index} strength={0.2}>
+                      <a
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-background text-muted-foreground transition-all hover:border-accent/50 hover:shadow-md ${social.color}`}
+                        title={social.name}
+                        aria-label={`Síguenos en ${social.name}`}
+                      >
+                        <social.icon className="h-5 w-5" />
+                      </a>
+                    </MagneticWrap>
                   ))}
                 </div>
                 <p className="mt-4 text-center text-sm text-muted-foreground sm:text-left">
