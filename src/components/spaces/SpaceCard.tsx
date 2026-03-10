@@ -55,15 +55,22 @@ export function SpaceCard({ space, onSelect, className }: SpaceCardProps) {
     >
       {/* Image Section */}
       <CardImage aspectRatio="video" className="relative">
-        {/* Placeholder background - replace with actual image */}
-        <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/60">
-          {/* Placeholder pattern */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-muted-foreground/30">
-              <LayoutGrid className="h-16 w-16" />
+        {space.image ? (
+          <img
+            src={space.image}
+            alt={space.name}
+            className="absolute inset-0 h-full w-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/60">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-muted-foreground/30">
+                <LayoutGrid className="h-16 w-16" />
+              </div>
             </div>
           </div>
-        </div>
+        )}
         
         {/* Capacity Badge */}
         <div className="absolute left-4 top-4 z-10">

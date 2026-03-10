@@ -163,17 +163,23 @@ export default function PlanificaPage() {
         ]}
       />
 
-      {/* Light Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-stone-100 via-stone-50 to-white py-16 sm:py-20">
+      {/* Photo Hero Section */}
+      <section className="relative overflow-hidden py-16 sm:py-20">
+        <img
+          src="/images/fotogaleria/exteriormuseo/RHG_3752And8more_Optimizer.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/60" />
         <CompassIcon />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <TextClipReveal>
-              <h1 className="text-3xl font-bold font-display sm:text-4xl lg:text-5xl">
+              <h1 className="text-3xl font-bold font-display sm:text-4xl lg:text-5xl text-white">
                 Planifica tu Visita
               </h1>
             </TextClipReveal>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-4 text-lg text-white/70">
               Todo lo que necesitas saber para planificar tu visita al museo.
             </p>
           </div>
@@ -255,11 +261,17 @@ export default function PlanificaPage() {
                 </address>
                 <div
                   ref={mapRef}
-                  className="mt-4 h-48 rounded-md bg-muted"
-                  role="img"
-                  aria-label="Mapa de ubicación del museo MUNET"
+                  className="mt-4 h-48 rounded-md overflow-hidden"
                 >
-                  {/* Map placeholder */}
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.661234567890!2d-99.21234567890123!3d19.42345678901234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sBosque+de+Chapultepec!5e0!3m2!1ses!2smx!4v1234567890"
+                    className="h-full w-full rounded-md"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Ubicación de MUNET"
+                  />
                 </div>
               </section>
             </TiltCard>

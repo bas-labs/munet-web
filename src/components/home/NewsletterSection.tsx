@@ -42,6 +42,14 @@ export default function NewsletterSection() {
 
   return (
     <section ref={sectionRef} className="relative py-24 lg:py-32 bg-[#0a0a0a] overflow-hidden">
+      {/* Background museum interior photo */}
+      <img
+        src="/images/fotogaleria/salainteractiva/RHG_5503.jpg"
+        alt=""
+        loading="lazy"
+        className="absolute inset-0 h-full w-full object-cover opacity-20 blur-sm"
+      />
+
       {/* Energy glow behind input */}
       <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full transition-all duration-1000 ${focused ? 'opacity-100 scale-100' : 'opacity-30 scale-75'}`}
         style={{

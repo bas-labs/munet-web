@@ -15,12 +15,22 @@ const timelineEvents: TimelineEvent[] = [
   {
     year: "1942",
     title: "Decreto del DOF",
-    description: "Se establece mediante decreto del Diario Oficial de la Federación la creación del primer espacio dedicado a la energía en México."
+    description: "El DDF cedió en forma gratuita a la CFE un predio en la Segunda Sección del Bosque de Chapultepec. Publicado en el Diario Oficial de la Federación."
   },
   {
     year: "1970",
     title: "MUTEC",
     description: "Se inaugura el Museo Tecnológico de la CFE (MUTEC) en el Bosque de Chapultepec, convirtiéndose en un referente de divulgación tecnológica."
+  },
+  {
+    year: "1993",
+    title: "Formalización",
+    description: "La CFE y el DDF formalizaron el Contrato de Donación del predio de aproximadamente 55,000 m2 por Acuerdo Presidencial."
+  },
+  {
+    year: "2000",
+    title: "Remodelación MUTEC",
+    description: "El MUTEC se remodeló, sin registrar desde entonces cambios significativos en sus contenidos."
   },
   {
     year: "2015",

@@ -33,6 +33,14 @@ export default function RentaCTA() {
   return (
     <SectionReveal direction="diagonal" triggerStart="top 85%">
       <section ref={sectionRef} className="relative min-h-[80vh] flex items-center justify-center overflow-hidden py-24 bg-[#0a0a0a]">
+        {/* Museum exterior background */}
+        <img
+          src="/images/fotogaleria/exteriormuseo/RHG_4463And8more_Optimizer.jpg"
+          alt=""
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover opacity-10"
+        />
+
         {/* Dramatic gradient background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#1a0f0a] to-[#0a0a0a]" />

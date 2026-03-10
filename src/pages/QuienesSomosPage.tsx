@@ -75,6 +75,11 @@ export default function QuienesSomosPage() {
 
       {/* Dark Hero */}
       <section ref={heroRef} className="relative overflow-hidden bg-[#09090B] pb-28 pt-12">
+        <img
+          src="/images/fotogaleria/exteriormuseo/RHG_3698And8more_Optimizer.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-25"
+        />
         <GrainOverlay />
         <AmbientGlow position="top-right" />
 
@@ -103,9 +108,10 @@ export default function QuienesSomosPage() {
         <SectionReveal direction="left" triggerStart="top 90%">
           <section aria-labelledby="historia-heading" className="mb-20">
             <div className="border-l-4 border-[#8DC63F] pl-8 py-4">
+              <img src="/images/logo_verde.png" alt="MUNET" className="h-16 w-auto mb-6" />
               <h2 id="historia-heading" className="font-display text-3xl font-bold">Nuestra Historia</h2>
               <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-                Contenido de la historia del museo próximamente.
+                El 22 de octubre de 1942 fue publicado en el Diario Oficial de la Federación un Acuerdo del Ejecutivo Federal mediante el cual, el entonces Departamento del Distrito Federal (DDF), cedió en forma gratuita a la Comisión Federal de Electricidad (CFE) un predio ubicado en la Segunda Sección del Bosque de Chapultepec de la Ciudad de México. Sin embargo no es sino hasta 1993 cuando por Acuerdo Presidencial del 2 de marzo, la CFE y el DDF formalizaron el Contrato de Donación del predio, de aproximadamente 55,000 m2. En dicho Contrato se acordó que la CFE seguiría utilizando el inmueble para un Museo Tecnológico, estableciendo que en caso de que le diera un uso distinto, el DDF podría gestionar la revocación de la donación. El Museo Tecnológico de la CFE se inauguró en 1970, enfocándose principalmente al tema de la energía eléctrica. El conocido como MUTEC se remodeló en el año 2000, sin registrar desde entonces cambios, actualizaciones o ampliaciones significativas en sus contenidos.
               </p>
             </div>
           </section>

@@ -55,8 +55,20 @@ const backdropVariants: Variants = {
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
   const shouldReduceMotion = useReducedMotion()
+
+  // Track scroll position for logo swap and header style
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10)
+    }
+    // Check initial position
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -87,8 +99,13 @@ export default function Header() {
   }, [mobileMenuOpen])
 
   return (
-    <header 
-      className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+    <header
+      className={cn(
+        'sticky top-0 z-50 w-full transition-all duration-300',
+        scrolled
+          ? 'border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'
+          : 'border-b border-transparent bg-transparent'
+      )}
       role="banner"
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -98,10 +115,10 @@ export default function Header() {
           className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           aria-label="MUNET - Ir a inicio"
         >
-          <img 
-            src="/images/logo_verde.png" 
-            alt="MUNET - Museo Nacional de Energía y Tecnología" 
-            className="h-10 w-auto"
+          <img
+            src={scrolled ? '/images/logo_verde.png' : '/images/logo_bco.png'}
+            alt="MUNET - Museo Nacional de Energía y Tecnología"
+            className="h-10 w-auto transition-opacity duration-300"
           />
         </Link>
 
@@ -117,10 +134,16 @@ export default function Header() {
                 key={item.href}
                 to={item.href}
                 className={cn(
-                  'rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                  isActive
-                    ? 'text-foreground'
-                    : 'text-muted-foreground'
+                  'rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                  scrolled
+                    ? cn(
+                        'hover:bg-muted hover:text-foreground',
+                        isActive ? 'text-foreground' : 'text-muted-foreground'
+                      )
+                    : cn(
+                        'hover:bg-white/10 hover:text-white',
+                        isActive ? 'text-white' : 'text-white/80'
+                      )
                 )}
                 aria-current={isActive ? 'page' : undefined}
               >
@@ -145,7 +168,10 @@ export default function Header() {
         {/* Mobile Menu Button */}
         <motion.button
           type="button"
-          className="inline-flex items-center justify-center rounded-md p-2 text-foreground md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className={cn(
+            'inline-flex items-center justify-center rounded-md p-2 md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors duration-300',
+            scrolled ? 'text-foreground' : 'text-white'
+          )}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-expanded={mobileMenuOpen}
           aria-controls="mobile-navigation"

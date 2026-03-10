@@ -117,13 +117,21 @@ export function SpaceDetail({
           {/* Photo Gallery */}
           <div className="relative mb-8 overflow-hidden rounded-xl">
             <div className="aspect-video bg-gradient-to-br from-muted to-muted/60">
-              {/* Placeholder image */}
-              <div className="flex h-full items-center justify-center">
-                <div className="text-center text-muted-foreground/50">
-                  <LayoutGrid className="mx-auto h-20 w-20" />
-                  <p className="mt-2 text-sm">Imagen {currentImageIndex + 1}</p>
+              {space.image ? (
+                <img
+                  src={space.image}
+                  alt={space.name}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center">
+                  <div className="text-center text-muted-foreground/50">
+                    <LayoutGrid className="mx-auto h-20 w-20" />
+                    <p className="mt-2 text-sm">Imagen {currentImageIndex + 1}</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Gallery Navigation */}

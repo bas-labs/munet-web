@@ -1,21 +1,22 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 
-const items = [
-  'ENERGÍA',
-  'TECNOLOGÍA',
-  'SOSTENIBILIDAD',
-  'INNOVACIÓN',
-  'CIENCIA',
-  'FUTURO',
-  'DESCUBRIMIENTO',
-  'TRANSFORMACIÓN',
+const images = [
+  '/images/fotogaleria/exteriormuseo/RHG_3698And8more_Optimizer.jpg',
+  '/images/fotogaleria/exteriormuseo/RHG_3725And8more_Optimizer---copia.jpg',
+  '/images/fotogaleria/exteriormuseo/RHG_3752And8more_Optimizer.jpg',
+  '/images/fotogaleria/exteriormuseo/RHG_3860And8more_Optimizer.jpg',
+  '/images/fotogaleria/exteriormuseo/RHG_3941And8more_Optimizer.jpg',
+  '/images/fotogaleria/exteriormuseo/RHG_4004And8more_Optimizer.jpg',
 ]
 
 export default function Marquee() {
   const trackRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReduced) return
+
     const ctx = gsap.context(() => {
       const track = trackRef.current
       if (!track) return
@@ -35,21 +36,22 @@ export default function Marquee() {
   }, [])
 
   const renderSet = (key: string) => (
-    <div className="marquee-set flex shrink-0 items-center gap-8" key={key}>
-      {items.map((item, i) => (
-        <span key={i} className="flex items-center gap-8 shrink-0">
-          <span className="font-display text-2xl md:text-4xl font-bold tracking-tight whitespace-nowrap">
-            {item}
-          </span>
-          <span className="w-2 h-2 rounded-full bg-[#8DC63F] shrink-0" />
-        </span>
+    <div className="marquee-set flex shrink-0 items-center gap-4" key={key}>
+      {images.map((src, i) => (
+        <img
+          key={i}
+          src={src}
+          alt=""
+          loading="lazy"
+          className="h-[200px] w-auto rounded-lg shrink-0 grayscale hover:grayscale-0 transition-all duration-500 object-cover"
+        />
       ))}
     </div>
   )
 
   return (
-    <div className="relative overflow-hidden py-8 md:py-12 bg-white text-[#09090B] select-none">
-      <div ref={trackRef} className="flex items-center gap-8 will-change-transform">
+    <div className="relative overflow-hidden py-8 md:py-12 bg-white select-none">
+      <div ref={trackRef} className="flex items-center gap-4 will-change-transform">
         {renderSet('a')}
         {renderSet('b')}
         {renderSet('c')}

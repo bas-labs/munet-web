@@ -73,10 +73,21 @@ export function ServiceCard({
       }}
       aria-pressed={isSelected}
     >
-      {/* Icon */}
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-accent/10 text-accent transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
-        {IconComponent && <IconComponent className="h-7 w-7" />}
-      </div>
+      {/* Image or Icon */}
+      {service.image ? (
+        <div className="mb-4 -mx-6 -mt-6 overflow-hidden rounded-t-xl">
+          <img
+            src={service.image}
+            alt={service.name}
+            className="h-32 w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+      ) : (
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-accent/10 text-accent transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
+          {IconComponent && <IconComponent className="h-7 w-7" />}
+        </div>
+      )}
 
       {/* Service Name */}
       <h3 className="font-display text-lg font-bold tracking-tight">

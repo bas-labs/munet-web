@@ -16,6 +16,7 @@ const exhibitions = [
     accent: '#8DC63F',
     level: 1,
     number: '01',
+    image: '/images/fotogaleria/exposiciones/RHG_0001And8more_Optimizer.jpg',
   },
   {
     id: 'energia-solar',
@@ -26,6 +27,7 @@ const exhibitions = [
     accent: '#FFB800',
     level: 2,
     number: '02',
+    image: '/images/fotogaleria/exposiciones/RHG_0019And8more_Optimizer.jpg',
   },
   {
     id: 'energia-nuclear',
@@ -36,6 +38,7 @@ const exhibitions = [
     accent: '#6BB52A',
     level: 1,
     number: '03',
+    image: '/images/fotogaleria/exposiciones/RHG_0091And8more_Optimizer.jpg',
   },
   {
     id: 'sostenibilidad',
@@ -46,6 +49,7 @@ const exhibitions = [
     accent: '#22C55E',
     level: 1,
     number: '04',
+    image: '/images/fotogaleria/exposiciones/RHG_0226And8more_Optimizer.jpg',
   },
   {
     id: 'energia-eolica',
@@ -56,6 +60,7 @@ const exhibitions = [
     accent: '#06B6D4',
     level: 2,
     number: '05',
+    image: '/images/fotogaleria/exposiciones/RHG_0343And8more_Optimizer.jpg',
   },
   {
     id: 'combustibles',
@@ -66,6 +71,7 @@ const exhibitions = [
     accent: '#EF4444',
     level: 1,
     number: '06',
+    image: '/images/fotogaleria/exposiciones/RHG_0001And8more_Optimizer.jpg',
   },
 ]
 
@@ -189,11 +195,12 @@ export default function ExposicionesPreview() {
                 className="expo-card group block shrink-0 w-[80vw] sm:w-[45vw] lg:w-[30vw]"
               >
                 <div className="relative h-[420px] lg:h-[480px] rounded-2xl overflow-hidden border border-neutral-200/60 bg-white transition-all duration-500 hover:shadow-xl hover:shadow-black/5 hover:border-transparent">
-                  {/* Background gradient */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${expo.gradient} opacity-[0.06] group-hover:opacity-[0.12] transition-opacity duration-500`} />
+                  {/* Background photo */}
+                  <img src={expo.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${expo.gradient} opacity-80`} />
 
                   {/* Number watermark */}
-                  <div className="absolute top-4 right-6 font-display font-black text-[6rem] leading-none text-neutral-100 group-hover:text-neutral-200/80 transition-colors duration-500 select-none">
+                  <div className="absolute top-4 right-6 font-display font-black text-[6rem] leading-none text-white/10 group-hover:text-white/20 transition-colors duration-500 select-none">
                     {expo.number}
                   </div>
 

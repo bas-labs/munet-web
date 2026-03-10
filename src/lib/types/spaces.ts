@@ -17,6 +17,7 @@ export interface Space {
   fullDescription: string
   equipment: SpaceEquipment[]
   capacityConfigurations?: string[]
+  image?: string
   imageUrl?: string
   galleryImages?: string[]
 }

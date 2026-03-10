@@ -146,6 +146,17 @@ export default function FotogaleriaPage() {
 
         {/* Page Hero */}
         <section className="relative overflow-hidden bg-[#09090B]">
+          {/* Background hero photo */}
+          <div className="absolute inset-0">
+            <img
+              src="/images/fotogaleria/exteriormuseo/RHG_3752And8more_Optimizer.jpg"
+              alt=""
+              className="h-full w-full object-cover opacity-30"
+              aria-hidden="true"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#09090B] via-[#09090B]/70 to-[#09090B]/50" />
+          </div>
+
           <GrainOverlay />
           <AmbientGlow position="top-right" />
 
@@ -157,16 +168,6 @@ export default function FotogaleriaPage() {
             aria-hidden="true"
           />
 
-          {/* Background pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div
-              className="h-full w-full"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              }}
-            />
-          </div>
-
           <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
             <div className="max-w-3xl">
               <TextClipReveal>
@@ -175,11 +176,7 @@ export default function FotogaleriaPage() {
                 </h1>
               </TextClipReveal>
               <p className="mt-6 text-lg text-white/80 sm:text-xl">
-                Explora MUNET a traves de imagenes
-              </p>
-              <p className="mt-2 text-base text-white/60">
-                Descubre la arquitectura, exposiciones, eventos y el proceso de construccion
-                del Museo Nacional de Energia y Tecnologia.
+                Descubre la arquitectura, exposiciones y espacios del museo
               </p>
             </div>
           </div>

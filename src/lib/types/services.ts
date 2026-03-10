@@ -19,6 +19,7 @@ export interface Service {
   id: string
   name: string
   icon: string
+  image?: string
   shortDescription: string
   fullDescription: string
   location: ServiceLocation

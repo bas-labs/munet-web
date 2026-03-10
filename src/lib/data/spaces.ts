@@ -9,6 +9,7 @@ export const SPACES: Space[] = [
   {
     id: 'auditorio',
     name: 'Auditorio',
+    image: '/images/renta/escenario-de-proscenio.png',
     capacity: '200 personas',
     description: 'Conferencias, presentaciones, proyecciones',
     fullDescription:
@@ -29,6 +30,7 @@ export const SPACES: Space[] = [
   {
     id: 'salas-exposicion',
     name: 'Salas de Exposición',
+    image: '/images/renta/exposicion.png',
     capacity: 'Variable',
     description: 'Eventos privados, cócteles, exposiciones temporales',
     fullDescription:
@@ -49,6 +51,7 @@ export const SPACES: Space[] = [
   {
     id: 'talleres',
     name: 'Talleres',
+    image: '/images/renta/profesor.png',
     capacity: '30 personas',
     description: 'Workshops, capacitaciones, sesiones de trabajo',
     fullDescription:
@@ -69,6 +72,7 @@ export const SPACES: Space[] = [
   {
     id: 'foro-aire-libre',
     name: 'Foro al Aire Libre',
+    image: '/images/renta/foro.png',
     capacity: '500 personas',
     description: 'Conciertos, eventos masivos, festivales',
     fullDescription:
@@ -89,6 +93,7 @@ export const SPACES: Space[] = [
   {
     id: 'explanada',
     name: 'Explanada',
+    image: '/images/renta/escenario.png',
     capacity: '1000+ personas',
     description: 'Eventos al aire libre, ferias, activaciones',
     fullDescription:

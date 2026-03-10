@@ -4,28 +4,9 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Button } from '@/components/ui/button'
 import { Clock, MapPin, Train, Bus, Car, Ticket } from 'lucide-react'
+import { AnimatedCounter } from '@/components/ui/gsap-primitives'
 
 gsap.registerPlugin(ScrollTrigger)
-
-function AnimatedNumber({ end, suffix = '' }: { end: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const obj = { val: 0 }
-      gsap.to(obj, {
-        val: end,
-        duration: 2.5,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: ref.current, start: 'top 80%', once: true },
-        onUpdate: () => {
-          if (ref.current) ref.current.textContent = Math.round(obj.val) + suffix
-        },
-      })
-    })
-    return () => ctx.revert()
-  }, [end, suffix])
-  return <span ref={ref}>0{suffix}</span>
-}
 
 export default function PlanificaSection() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -77,7 +58,7 @@ export default function PlanificaSection() {
     <section ref={sectionRef} className="relative py-24 lg:py-32 bg-white overflow-hidden">
       {/* Oversized background numbers */}
       <div className="big-number absolute top-[5%] -right-[5%] font-display font-black text-[25vw] leading-none text-neutral-50 select-none pointer-events-none">
-        <AnimatedNumber end={80} suffix="" />
+        <AnimatedCounter end={80} suffix="" />
       </div>
 
       <div className="container mx-auto px-4 relative">
@@ -103,7 +84,7 @@ export default function PlanificaSection() {
               <p className="text-label text-muted-foreground mb-2">Entrada General</p>
               <div className="flex items-baseline gap-2">
                 <span className="font-display font-black text-[clamp(4rem,8vw,8rem)] leading-none text-foreground">
-                  $<AnimatedNumber end={80} />
+                  $<AnimatedCounter end={80} />
                 </span>
                 <span className="text-body-lg text-muted-foreground">MXN</span>
               </div>

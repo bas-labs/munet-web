@@ -201,6 +201,11 @@ export default function InvolucratePage() {
 
       {/* Dark Hero */}
       <section ref={heroRef} className="relative overflow-hidden bg-[#09090B] pb-28 pt-12">
+        <img
+          src="/images/fotogaleria/exteriormuseo/RHG_3941And8more_Optimizer.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-15"
+        />
         <GrainOverlay />
         <AmbientGlow position="top-right" />
 
@@ -279,6 +284,15 @@ export default function InvolucratePage() {
                   embajadores del museo, apoyando en recorridos guiados, talleres
                   educativos y eventos especiales.
                 </p>
+
+                <div className="mt-6 overflow-hidden rounded-xl">
+                  <img
+                    src="/images/fotogaleria/salainteractiva/RHG_5614.jpg"
+                    alt="Interior del museo MUNET"
+                    className="w-full h-48 object-cover"
+                    loading="lazy"
+                  />
+                </div>
 
                 <div className="mt-8">
                   <h3 className="text-lg font-semibold mb-4">

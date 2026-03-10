@@ -152,6 +152,11 @@ export default function RentaEspaciosPage() {
 
       {/* Hero Section */}
       <section ref={heroRef} className="relative overflow-hidden bg-[#09090B]">
+        <img
+          src="/images/fotogaleria/exteriormuseo/RHG_4544And8more_Optimizer.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-15"
+        />
         <GrainOverlay />
         <AmbientGlow position="top-right" />
         <AmbientGlow position="bottom-left" color="#8DC63F" opacity={0.05} />
@@ -281,26 +286,14 @@ export default function RentaEspaciosPage() {
               </ul>
             </div>
 
-            {/* Right: Image Placeholder */}
-            <div className="relative overflow-hidden rounded-2xl bg-muted lg:order-first">
-              <div className="flex aspect-[4/3] items-center justify-center lg:aspect-auto lg:h-full">
-                <div className="text-center text-muted-foreground/30">
-                  <svg
-                    className="mx-auto h-24 w-24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={0.5}
-                      d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z"
-                    />
-                  </svg>
-                  <p className="mt-4 text-sm">Imagen del Museo</p>
-                </div>
-              </div>
+            {/* Right: Museum Image */}
+            <div className="relative overflow-hidden rounded-2xl lg:order-first">
+              <img
+                src="/images/fotogaleria/exteriormuseo/RHG_3860And8more_Optimizer.jpg"
+                alt="Museo MUNET - Vista exterior"
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>

@@ -11,31 +11,44 @@ import {
   useStaggerReveal,
 } from '@/components/ui/gsap-primitives'
 
+const exposicionPhotos = [
+  '/images/fotogaleria/exposiciones/RHG_0001And8more_Optimizer.jpg',
+  '/images/fotogaleria/exposiciones/RHG_0019And8more_Optimizer.jpg',
+  '/images/fotogaleria/exposiciones/RHG_0091And8more_Optimizer.jpg',
+  '/images/fotogaleria/exposiciones/RHG_0226And8more_Optimizer.jpg',
+  '/images/fotogaleria/exposiciones/RHG_0343And8more_Optimizer.jpg',
+]
+
 const nivel1Exposiciones = [
   {
     id: 'conceptos-basicos',
     title: 'Conceptos Básicos',
     description: 'Definición de energía, transformación materia-energía y manifestaciones de la energía.',
+    image: exposicionPhotos[0],
   },
   {
     id: 'electricidad',
     title: 'Electricidad',
     description: 'Energía secundaria, flujo de electrones, tipos de circuitos y métodos de generación.',
+    image: exposicionPhotos[1],
   },
   {
     id: 'combustibles-fosiles',
     title: 'Combustibles Fósiles',
     description: 'Carbón, gas natural, petróleo y su impacto ambiental.',
+    image: exposicionPhotos[2],
   },
   {
     id: 'energia-nuclear',
     title: 'Energía Nuclear',
     description: 'Fusión y fisión, producción libre de GHG y aplicaciones médicas.',
+    image: exposicionPhotos[3],
   },
   {
     id: 'sostenibilidad-n1',
     title: 'Sostenibilidad',
     description: 'Desarrollo sostenible y la tecnología como habilitador del futuro energético.',
+    image: exposicionPhotos[4],
   },
 ]
 
@@ -44,31 +57,37 @@ const nivel2Exposiciones = [
     id: 'energia-solar',
     title: 'Energía Solar',
     description: 'El sol como fuente primaria, paneles fotovoltaicos y energía renovable.',
+    image: exposicionPhotos[0],
   },
   {
     id: 'energia-eolica',
     title: 'Energía Eólica',
     description: 'Historia de la energía eólica, aerogeneradores y tecnología de turbinas.',
+    image: exposicionPhotos[1],
   },
   {
     id: 'energia-hidraulica',
     title: 'Energía Hidráulica',
     description: 'Energía hidroeléctrica, energía potencial y cinética del agua.',
+    image: exposicionPhotos[2],
   },
   {
     id: 'energia-geotermica',
     title: 'Energía Geotérmica',
     description: 'Calor interno de la Tierra, géiseres y generación de electricidad.',
+    image: exposicionPhotos[3],
   },
   {
     id: 'bioenergia',
     title: 'Bioenergía',
     description: 'Tipos de biomasa, producción de biocombustibles y la energía más antigua.',
+    image: exposicionPhotos[4],
   },
   {
     id: 'sostenibilidad-n2',
     title: 'Sostenibilidad',
     description: 'Retos globales de sostenibilidad.',
+    image: exposicionPhotos[0],
   },
 ]
 
@@ -167,6 +186,11 @@ export default function ExposicionesPage() {
 
       {/* Dark Hero */}
       <section className="relative overflow-hidden bg-[#09090B] pb-28 pt-12">
+        <img
+          src="/images/fotogaleria/exteriormuseo/RHG_3698And8more_Optimizer.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-20"
+        />
         <GrainOverlay />
         <AmbientGlow position="top-right" />
 
@@ -230,6 +254,15 @@ export default function ExposicionesPage() {
 
       {/* Card Grid */}
       <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+        {/* Floor Plan */}
+        <div className="mb-12">
+          <img
+            src={displayedLevel === 1 ? '/images/nivel1.png' : '/images/nivel2.png'}
+            alt={`Mapa del Nivel ${displayedLevel}`}
+            className="mx-auto max-w-2xl w-full rounded-xl border border-border shadow-sm"
+            loading="lazy"
+          />
+        </div>
         <div
           ref={gridRef}
           id="exposiciones-panel"
@@ -242,7 +275,14 @@ export default function ExposicionesPage() {
               <article className="group relative rounded-lg border border-border bg-card p-6 transition-shadow duration-300 hover:shadow-lg hover:shadow-[#8DC63F]/10 focus-within:ring-2 focus-within:ring-ring">
                 <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-[#8DC63F]/0 to-[#8DC63F]/0 transition-all duration-500 group-hover:from-[#8DC63F]/5 group-hover:to-transparent pointer-events-none" />
                 <div className="relative">
-                  <div className="mb-4 h-40 rounded-md bg-muted" aria-hidden="true" />
+                  <div className="mb-4 h-40 rounded-md overflow-hidden">
+                    <img
+                      src={expo.image}
+                      alt={expo.title}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
                   <h2 className="text-lg font-semibold">{expo.title}</h2>
                   <p className="mt-2 text-sm text-muted-foreground">
                     {expo.description}

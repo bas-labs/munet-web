@@ -98,6 +98,19 @@ export default function HeroSection() {
       ref={sectionRef}
       className="relative h-[100dvh] min-h-[700px] flex items-end overflow-hidden bg-[#09090B]"
     >
+      {/* Background video */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 h-full w-full object-cover"
+        poster="/images/fotogaleria/exteriormuseo/RHG_3698And8more_Optimizer.jpg"
+      >
+        <source src="/images/banner_placeholder.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-black/60" />
+
       {/* Grain texture overlay */}
       <GrainOverlay />
 
@@ -110,6 +123,13 @@ export default function HeroSection() {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-16">
             {/* Left column — main content */}
             <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-3xl">
+              {/* Watermark logo */}
+              <img
+                src="/images/logo_bco.png"
+                alt=""
+                className="w-[120px] opacity-15 mb-8"
+              />
+
               {/* Eyebrow */}
               <div className="hero-eyebrow flex items-center gap-2.5 mb-10 md:mb-14">
                 <span className="relative flex h-1.5 w-1.5">

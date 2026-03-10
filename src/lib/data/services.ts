@@ -10,6 +10,7 @@ export const services: Service[] = [
     id: 'cafeteria',
     name: 'Cafetería',
     icon: 'Coffee',
+    image: '/images/fotogaleria/salainteractiva/RHG_5503.jpg',
     shortDescription: 'Alimentos y bebidas durante tu visita',
     fullDescription:
       'Disfruta de una variedad de alimentos y bebidas en nuestra cafetería ubicada en el Nivel 1. Ofrecemos opciones para todos los gustos, desde snacks ligeros hasta comidas completas.',
@@ -36,6 +37,7 @@ export const services: Service[] = [
     id: 'tienda',
     name: 'Tienda MUNET',
     icon: 'ShoppingBag',
+    image: '/images/fotogaleria/salainteractiva/RHG_5508.jpg',
     shortDescription: 'Souvenirs, libros y artículos exclusivos',
     fullDescription:
       'Llévate un recuerdo único de tu visita. Encuentra souvenirs exclusivos, libros sobre energía y tecnología, juguetes educativos y artículos de diseño inspirados en las exposiciones del museo.',
@@ -58,6 +60,7 @@ export const services: Service[] = [
     id: 'guardarropa',
     name: 'Guardarropa',
     icon: 'Briefcase',
+    image: '/images/fotogaleria/auditorio/1.jpg',
     shortDescription: 'Servicio gratuito de resguardo',
     fullDescription:
       'Guarda tus pertenencias de forma segura y gratuita. Ofrecemos casilleros y servicio de guardarropa para que puedas disfrutar tu visita sin preocupaciones.',
@@ -81,6 +84,7 @@ export const services: Service[] = [
     id: 'estacionamiento',
     name: 'Estacionamiento',
     icon: 'Car',
+    image: '/images/fotogaleria/exteriormuseo/RHG_3752And8more_Optimizer.jpg',
     shortDescription: 'Ubicación, tarifas y horarios',
     fullDescription:
       'Contamos con estacionamiento para visitantes con tarifa preferencial. El acceso es por Av. de los Compositores con espacio para automóviles y autobuses escolares.',
@@ -106,6 +110,7 @@ export const services: Service[] = [
     id: 'wifi',
     name: 'Wi-Fi Gratuito',
     icon: 'Wifi',
+    image: '/images/fotogaleria/salainteractiva/RHG_5576.jpg',
     shortDescription: 'Red disponible en todo el museo',
     fullDescription:
       'Conéctate a nuestra red Wi-Fi gratuita en todas las áreas del museo. Ideal para compartir tu experiencia en redes sociales o consultar información adicional sobre las exposiciones.',
@@ -127,6 +132,7 @@ export const services: Service[] = [
     id: 'sanitarios',
     name: 'Sanitarios',
     icon: 'Bath',
+    image: '/images/fotogaleria/exteriormuseo/RHG_3941And8more_Optimizer.jpg',
     shortDescription: 'Ubicaciones en Nivel 1 y Nivel 2',
     fullDescription:
       'Sanitarios limpios y accesibles en ambos niveles del museo. Incluyen instalaciones para personas con discapacidad y cambiadores para bebés.',
@@ -142,6 +148,7 @@ export const services: Service[] = [
     id: 'accesibilidad',
     name: 'Accesibilidad',
     icon: 'Accessibility',
+    image: '/images/fotogaleria/salainteractiva/RHG_5614.jpg',
     shortDescription: 'Elevadores, rampas y servicios especiales',
     fullDescription:
       'MUNET es un museo 100% accesible. Contamos con elevadores, rampas, sanitarios accesibles y sillas de ruedas disponibles para préstamo gratuito.',
@@ -163,6 +170,7 @@ export const services: Service[] = [
     id: 'lactancia',
     name: 'Área de Lactancia',
     icon: 'Baby',
+    image: '/images/fotogaleria/auditorio/3.jpg',
     shortDescription: 'Espacio privado para madres',
     fullDescription:
       'Espacio cómodo y privado para madres lactantes. Equipado con sillones confortables, cambiador y lavabo. Acceso libre durante el horario del museo.',

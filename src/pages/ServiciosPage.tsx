@@ -97,8 +97,13 @@ export default function ServiciosPage() {
       />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-[#8DC63F]/8 to-white py-16 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-gradient-to-b from-[#8DC63F]/8 to-white py-16 sm:py-20 overflow-hidden">
+        <img
+          src="/images/fotogaleria/salainteractiva/RHG_5540.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-5"
+        />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <TextClipReveal>
               <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">

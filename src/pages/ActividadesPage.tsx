@@ -159,6 +159,11 @@ export default function ActividadesPage() {
 
       {/* Page Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/90">
+        <img
+          src="/images/fotogaleria/salainteractiva/RHG_5576.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-20 mix-blend-overlay"
+        />
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
         <GrainOverlay opacity={0.04} />
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
@@ -337,8 +342,14 @@ export default function ActividadesPage() {
         )}
 
         {/* Info Section */}
-        <section className="mt-16 rounded-xl bg-muted/50 p-8">
-          <div className="mx-auto max-w-3xl text-center">
+        <section className="mt-16 rounded-xl bg-muted/50 p-8 relative overflow-hidden">
+          <img
+            src="/images/fotogaleria/torresdeluz/RHG_5969And8more_Optimizer.jpg"
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover opacity-10"
+            loading="lazy"
+          />
+          <div className="mx-auto max-w-3xl text-center relative">
             <h2 className="mb-4 font-display text-2xl font-bold">
               ¿Quieres organizar una actividad especial?
             </h2>

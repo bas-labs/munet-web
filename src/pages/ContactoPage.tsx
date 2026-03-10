@@ -136,6 +136,11 @@ export default function ContactoPage() {
 
       {/* Dark Hero */}
       <section ref={heroRef} className="relative overflow-hidden bg-[#09090B] pb-28 pt-12">
+        <img
+          src="/images/fotogaleria/exteriormuseo/RHG_4004And8more_Optimizer.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-15"
+        />
         <GrainOverlay />
         <AmbientGlow position="top-right" />
 
