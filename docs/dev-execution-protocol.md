@@ -297,6 +297,148 @@ After completing each feature:
 
 ---
 
+## Parallel Phase Execution
+
+### Overview
+
+Development uses parallel agent execution within phases. Multiple agents work simultaneously on different features, but ONLY within the active phase.
+
+### Rules
+
+#### 1. Phase-Only Concurrency
+```
+✅ ALLOWED: Multiple features in Phase 1 running in parallel
+❌ FORBIDDEN: Starting Phase 2 feature while Phase 1 is incomplete
+```
+
+Only ONE phase can be active at a time. All features in a phase must complete before advancing.
+
+#### 2. Agent Ownership
+
+Each agent owns exactly ONE feature:
+
+```
+┌─────────────────────────────────────────────────────┐
+│              PHASE 1: FOUNDATION                    │
+├─────────────────────────────────────────────────────┤
+│  Agent A → Design System                            │
+│  Agent B → Navigation & Layout                      │
+│  Agent C → Homepage                                 │
+│  Agent D → Core Content Pages                       │
+└─────────────────────────────────────────────────────┘
+```
+
+Rules:
+- One agent per feature
+- No agent works on multiple features simultaneously
+- Agents may run in parallel
+- Agent must complete feature before taking new assignment
+
+#### 3. Dependency Management
+
+Some features depend on others:
+
+```
+Design System (foundational)
+    ↓
+    ├── Navigation & Layout
+    ├── Homepage
+    └── Core Content Pages
+```
+
+**Shared Components Rule:**
+- Design System creates shared components first
+- Other agents REUSE existing components (never duplicate)
+- Import from @/components/ui/ for shared UI
+- Import from @/lib/ for shared utilities
+
+#### 4. Agent Completion Loop
+
+Each agent follows this loop independently:
+
+```
+┌─────────────────────────────────────────────────────┐
+│              AGENT COMPLETION LOOP                  │
+├─────────────────────────────────────────────────────┤
+│                                                      │
+│  1. READ PRD                                         │
+│     └── Open /docs/prd.md                           │
+│     └── Find feature requirements                   │
+│     └── Identify acceptance criteria                │
+│                                                      │
+│  2. IMPLEMENT                                        │
+│     └── Write code for the feature                  │
+│     └── Use Component Gallery patterns              │
+│     └── Reuse shared components                     │
+│                                                      │
+│  3. TEST                                             │
+│     └── npm run build (must pass)                   │
+│     └── Visual verification                         │
+│     └── Responsive check                            │
+│                                                      │
+│  4. EVALUATE                                         │
+│     └── Compare implementation vs PRD               │
+│     └── Check all requirements met                  │
+│     └── Verify no regressions                       │
+│                                                      │
+│  5. RETRY (if needed)                                │
+│     └── Fix errors/gaps                             │
+│     └── Return to step 3                            │
+│                                                      │
+│  6. COMPLETE                                         │
+│     └── Commit with descriptive message             │
+│     └── Report completion to orchestrator           │
+│     └── Await next assignment                       │
+│                                                      │
+└─────────────────────────────────────────────────────┘
+```
+
+#### 5. PRD Verification Checklist
+
+After each feature, agent must verify:
+
+- [ ] All UI copy matches PRD exactly (Spanish)
+- [ ] All components match PRD specifications
+- [ ] All routes match PRD sitemap
+- [ ] All interactions work as specified
+- [ ] Responsive design implemented
+- [ ] Accessibility basics in place
+
+#### 6. Coordination Protocol
+
+**Before starting:**
+```
+1. Pull latest from main
+2. Check for new shared components
+3. Read any updated protocols
+```
+
+**After completing:**
+```
+1. Commit changes
+2. Push to feature branch or main
+3. Update progress tracker in this file
+4. Report completion
+```
+
+**Conflict Resolution:**
+- If two agents need same component → first to implement wins
+- Others must reuse, not duplicate
+- Orchestrator resolves disputes
+
+---
+
+## Agent Assignment Log
+
+| Agent | Feature | Status | Started | Completed |
+|-------|---------|--------|---------|-----------|
+| A | Design System | 🔄 Active | 2026-03-10 | - |
+| B | Navigation & Layout | ⏳ Queued | - | - |
+| C | Homepage | ⏳ Queued | - | - |
+| D | Core Content Pages | ⏳ Queued | - | - |
+
+---
+
 ## Notes
 
 - Component Gallery reference: https://component.gallery/
