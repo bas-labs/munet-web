@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { motion, useReducedMotion, HTMLMotionProps } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { Loader2 } from 'lucide-react'
@@ -52,7 +52,7 @@ const buttonVariants = cva(
 )
 
 export interface AnimatedButtonProps
-  extends Omit<HTMLMotionProps<'button'>, 'ref'>,
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   /** Show loading spinner */
@@ -88,7 +88,7 @@ const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButtonProps>(
         <Slot
           className={cn(buttonVariants({ variant, size, className }))}
           ref={ref as React.Ref<HTMLElement>}
-          {...(props as React.HTMLAttributes<HTMLElement>)}
+          {...props}
         >
           {children}
         </Slot>
@@ -128,35 +128,35 @@ interface RippleButtonProps extends AnimatedButtonProps {
 }
 
 const RippleButton = React.forwardRef<HTMLButtonElement, RippleButtonProps>(
-  ({ className, rippleColor = 'rgba(255, 255, 255, 0.3)', children, ...props }, ref) => {
+  ({ className, rippleColor = 'rgba(255, 255, 255, 0.3)', children, onClick, ...props }, ref) => {
     const [ripples, setRipples] = React.useState<{ x: number; y: number; id: number }[]>([])
     const shouldReduceMotion = useReducedMotion()
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (shouldReduceMotion) return
+      if (!shouldReduceMotion) {
+        const rect = e.currentTarget.getBoundingClientRect()
+        const x = e.clientX - rect.left
+        const y = e.clientY - rect.top
+        const id = Date.now()
 
-      const rect = e.currentTarget.getBoundingClientRect()
-      const x = e.clientX - rect.left
-      const y = e.clientY - rect.top
-      const id = Date.now()
+        setRipples((prev) => [...prev, { x, y, id }])
 
-      setRipples((prev) => [...prev, { x, y, id }])
-
-      // Remove ripple after animation
-      setTimeout(() => {
-        setRipples((prev) => prev.filter((r) => r.id !== id))
-      }, 600)
+        // Remove ripple after animation
+        setTimeout(() => {
+          setRipples((prev) => prev.filter((r) => r.id !== id))
+        }, 600)
+      }
 
       // Call original onClick if present
-      props.onClick?.(e)
+      onClick?.(e)
     }
 
     return (
       <AnimatedButton
         ref={ref}
         className={cn('relative overflow-hidden', className)}
-        {...props}
         onClick={handleClick}
+        {...props}
       >
         {ripples.map((ripple) => (
           <motion.span
