@@ -219,3 +219,154 @@ aws dynamodb update-time-to-live \
 ```
 
 Set `ttl` attribute to Unix timestamp (e.g., 90 days from creation) for non-completed orders.
+
+---
+
+### Table: munet-inquiries
+
+Table for storing venue rental inquiries.
+
+#### Key Schema
+
+| Attribute | Key Type | Type | Description |
+|-----------|----------|------|-------------|
+| inquiryId | HASH (PK) | String | Generated unique identifier (INQ-XXXX-XXXX format) |
+
+#### Attributes
+
+| Attribute | Type | Required | Description |
+|-----------|------|----------|-------------|
+| inquiryId | String | Yes | Unique inquiry identifier |
+| name | String | Yes | Contact's full name |
+| company | String | No | Company or organization name |
+| email | String | Yes | Contact email address |
+| phone | String | Yes | Contact phone number |
+| spaceId | String | Yes | Requested space ID (see Space IDs below) |
+| eventDate | String | Yes | Tentative event date (YYYY-MM-DD format) |
+| attendees | Number | Yes | Expected number of attendees |
+| eventType | String | Yes | Type of event (see Event Types below) |
+| message | String | No | Additional message or requirements |
+| status | String | Yes | Inquiry status (see Status Values below) |
+| createdAt | String | Yes | ISO 8601 timestamp |
+
+#### Space IDs
+
+| Space ID | Display Name | Max Capacity |
+|----------|--------------|--------------|
+| auditorio | Auditorio | 200 |
+| salas-exposicion | Salas de Exposición | Variable |
+| talleres | Talleres | 30 |
+| foro-aire-libre | Foro al Aire Libre | 500 |
+| explanada | Explanada | 1000+ |
+
+#### Event Types
+
+| Type | Display Name (ES) |
+|------|-------------------|
+| corporativo | Corporativo |
+| social | Social |
+| cultural | Cultural |
+| otro | Otro |
+
+#### Status Values
+
+| Status | Description |
+|--------|-------------|
+| new | Inquiry received, pending review |
+| contacted | Admin has reached out to inquirer |
+| booked | Event confirmed and booked |
+| declined | Inquiry declined or cancelled |
+
+#### Example Document
+
+```json
+{
+  "inquiryId": "INQ-L5K2N8-A3B4C5",
+  "name": "María García López",
+  "company": "Empresa Innovadora S.A.",
+  "email": "maria.garcia@empresa.com",
+  "phone": "55 1234 5678",
+  "spaceId": "auditorio",
+  "eventDate": "2026-04-15",
+  "attendees": 150,
+  "eventType": "corporativo",
+  "message": "Conferencia anual de tecnología. Necesitamos proyector y sistema de traducción simultánea.",
+  "status": "new",
+  "createdAt": "2026-03-10T16:45:00.000Z"
+}
+```
+
+#### Global Secondary Indexes (Optional)
+
+##### status-index
+
+For querying inquiries by status (admin dashboard filtering).
+
+| Attribute | Key Type | Type |
+|-----------|----------|------|
+| status | HASH | String |
+
+##### spaceId-index
+
+For querying inquiries by space (availability planning).
+
+| Attribute | Key Type | Type |
+|-----------|----------|------|
+| spaceId | HASH | String |
+
+#### Access Patterns
+
+##### Write Patterns
+
+1. **Create inquiry** (submitInquiry Lambda)
+   - Operation: PutItem
+   - Key: inquiryId (generated)
+   - Status: new
+
+2. **Update inquiry status** (admin action)
+   - Operation: UpdateItem
+   - Key: inquiryId
+   - Updates: status, notes (optional)
+
+##### Read Patterns
+
+1. **Get inquiry by ID** (admin lookup)
+   - Operation: GetItem
+   - Key: inquiryId
+
+2. **List inquiries by status** (admin dashboard)
+   - Operation: Query on status-index
+   - Key: status
+
+3. **List inquiries by space** (availability check)
+   - Operation: Query on spaceId-index
+   - Key: spaceId
+
+#### Data Retention
+
+- **All inquiries:** Retain for 2 years (business records)
+- **After 2 years:** Archive to S3 Glacier for long-term storage
+
+---
+
+## Infrastructure as Code
+
+### Create Tables (AWS CLI)
+
+```bash
+# Create munet-inquiries table
+aws dynamodb create-table \
+  --table-name munet-inquiries \
+  --attribute-definitions \
+    AttributeName=inquiryId,AttributeType=S \
+  --key-schema \
+    AttributeName=inquiryId,KeyType=HASH \
+  --billing-mode PAY_PER_REQUEST \
+  --region us-east-1
+
+# Enable PITR
+aws dynamodb update-continuous-backups \
+  --table-name munet-inquiries \
+  --point-in-time-recovery-specification PointInTimeRecoveryEnabled=true \
+  --region us-east-1
+```

@@ -12,6 +12,9 @@ import {
   InvolucratePage,
   ContactoPage,
   AvisoPrivacidadPage,
+  OrderLookupPage,
+  CheckoutSuccessPage,
+  CheckoutCancelPage,
 } from '@/pages'
 
 function App() {
@@ -23,6 +26,9 @@ function App() {
         <Route path="/exposiciones" element={<ExposicionesPage />} />
         <Route path="/planifica-tu-visita" element={<PlanificaPage />} />
         <Route path="/boletos" element={<BoletosPage />} />
+        <Route path="/mis-boletos" element={<OrderLookupPage />} />
+        <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+        <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
         <Route path="/actividades" element={<ActividadesPage />} />
         <Route path="/servicios" element={<ServiciosPage />} />
         <Route path="/fotogaleria" element={<FotogaleriaPage />} />
