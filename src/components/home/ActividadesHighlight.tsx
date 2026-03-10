@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Calendar, Clock, ArrowRight, Users } from 'lucide-react'
 
 interface Activity {
   id: string
@@ -8,116 +10,193 @@ interface Activity {
   date: string
   time: string
   category: string
-  image: string
+  categoryColor: string
+  spots?: number
 }
 
 const upcomingActivities: Activity[] = [
   {
     id: '1',
-    title: 'Taller de Energía Solar para Niños',
+    title: 'Taller: Construye tu Panel Solar',
     date: '15 Mar 2026',
     time: '11:00 hrs',
     category: 'Taller',
-    image: '☀️',
+    categoryColor: 'bg-amber-500',
+    spots: 8,
   },
   {
     id: '2',
-    title: 'Conferencia: El Futuro de la Energía Nuclear',
+    title: 'El Futuro de la Energía en México',
     date: '18 Mar 2026',
     time: '17:00 hrs',
     category: 'Conferencia',
-    image: '⚛️',
+    categoryColor: 'bg-blue-500',
   },
   {
     id: '3',
-    title: 'Visita Guiada: Historia de la Electricidad',
+    title: 'Visita Guiada: Arquitectura del Museo',
     date: '22 Mar 2026',
-    time: '10:30 hrs',
+    time: '12:00 hrs',
     category: 'Visita Guiada',
-    image: '⚡',
+    categoryColor: 'bg-emerald-500',
+    spots: 12,
+  },
+  {
+    id: '4',
+    title: 'Introducción a la Robótica',
+    date: '25 Mar 2026',
+    time: '10:00 hrs',
+    category: 'Taller',
+    categoryColor: 'bg-amber-500',
+    spots: 15,
   },
 ]
 
 export default function ActividadesHighlight() {
+  const shouldReduceMotion = useReducedMotion()
+
   return (
-    <section className="py-20 lg:py-32 bg-neutral-900 text-white overflow-hidden">
-      <div className="container mx-auto px-4">
+    <section className="py-24 lg:py-32 bg-neutral-900 relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#8DC63F]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-[#43A047]/10 rounded-full blur-3xl" />
+      </div>
+      
+      <div className="container mx-auto px-4 relative">
         {/* Section header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+        <motion.div
+          className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
           <div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <span className="inline-block bg-[#8DC63F]/20 text-[#8DC63F] text-sm font-semibold px-4 py-2 rounded-full mb-4">
+              Agenda Cultural
+            </span>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Próximas Actividades
             </h2>
             <p className="text-lg text-neutral-400 max-w-xl">
               Talleres, conferencias y experiencias diseñadas para todas las edades.
             </p>
           </div>
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="border-neutral-600 text-white hover:bg-neutral-800 shrink-0"
+          <motion.div
+            whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+            whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
           >
-            <Link to="/actividades">Ver Todas las Actividades</Link>
-          </Button>
-        </div>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="border-neutral-700 text-white hover:bg-neutral-800 hover:border-[#8DC63F]/50 shrink-0 px-6"
+            >
+              <Link to="/actividades" className="flex items-center gap-2">
+                Ver Calendario
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </motion.div>
+        </motion.div>
 
         {/* Horizontal scroll cards */}
         <div className="relative -mx-4 px-4">
-          <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
-            {upcomingActivities.map((activity) => (
-              <Link
+          <motion.div 
+            className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide"
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {upcomingActivities.map((activity, index) => (
+              <motion.div
                 key={activity.id}
-                to={`/actividades/${activity.id}`}
-                className="shrink-0 w-[320px] md:w-[360px] snap-start"
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 * index }}
               >
-                <Card className="h-full bg-neutral-800 border-neutral-700 hover:border-orange-500/50 transition-all duration-300 group overflow-hidden">
-                  {/* Image placeholder */}
-                  <div className="h-48 bg-gradient-to-br from-neutral-700 to-neutral-800 flex items-center justify-center">
-                    <span className="text-6xl group-hover:scale-110 transition-transform duration-300">
-                      {activity.image}
-                    </span>
-                  </div>
-                  <CardContent className="p-6">
-                    {/* Category badge */}
-                    <span className="inline-block text-xs font-semibold text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full mb-3">
-                      {activity.category}
-                    </span>
-                    {/* Title */}
-                    <h3 className="text-lg font-semibold text-white mb-4 group-hover:text-orange-400 transition-colors line-clamp-2">
-                      {activity.title}
-                    </h3>
-                    {/* Date & Time */}
-                    <div className="flex items-center gap-4 text-sm text-neutral-400">
-                      <span className="flex items-center gap-2">
-                        <span>📅</span>
-                        {activity.date}
-                      </span>
-                      <span className="flex items-center gap-2">
-                        <span>🕐</span>
-                        {activity.time}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
+                <Link
+                  to={`/actividades/${activity.id}`}
+                  className="block shrink-0 w-[320px] md:w-[360px] snap-start"
+                >
+                  <motion.div
+                    whileHover={shouldReduceMotion ? {} : { y: -8, scale: 1.02 }}
+                    whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <Card className="h-full bg-neutral-800/80 backdrop-blur-sm border-neutral-700 hover:border-[#8DC63F]/50 transition-all duration-300 group overflow-hidden">
+                      {/* Top color bar */}
+                      <div className={`h-1.5 ${activity.categoryColor}`} />
+                      
+                      <CardContent className="p-6">
+                        {/* Category badge */}
+                        <span className={`inline-block text-xs font-semibold text-white ${activity.categoryColor} px-3 py-1.5 rounded-full mb-4`}>
+                          {activity.category}
+                        </span>
+                        
+                        {/* Title */}
+                        <h3 className="text-lg font-bold text-white mb-4 group-hover:text-[#8DC63F] transition-colors line-clamp-2 min-h-[56px]">
+                          {activity.title}
+                        </h3>
+                        
+                        {/* Meta info */}
+                        <div className="space-y-2 text-sm text-neutral-400">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4 text-[#8DC63F]" />
+                            {activity.date}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Clock className="h-4 w-4 text-[#8DC63F]" />
+                            {activity.time}
+                          </div>
+                          {activity.spots && (
+                            <div className="flex items-center gap-2">
+                              <Users className="h-4 w-4 text-[#8DC63F]" />
+                              <span className="text-[#8DC63F] font-medium">{activity.spots} lugares disponibles</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Arrow */}
+                        <div className="mt-5 pt-4 border-t border-neutral-700">
+                          <span className="text-sm font-medium text-[#8DC63F] flex items-center gap-1 group-hover:gap-2 transition-all">
+                            Ver detalles
+                            <ArrowRight className="h-4 w-4" />
+                          </span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </Link>
+              </motion.div>
             ))}
             
             {/* View more card */}
             <Link
               to="/actividades"
-              className="shrink-0 w-[320px] md:w-[360px] snap-start"
+              className="block shrink-0 w-[320px] md:w-[360px] snap-start"
             >
-              <Card className="h-full bg-neutral-800/50 border-neutral-700 border-dashed hover:border-orange-500/50 transition-all duration-300 flex items-center justify-center min-h-[320px]">
-                <div className="text-center p-6">
-                  <div className="w-16 h-16 bg-neutral-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl">→</span>
+              <motion.div
+                whileHover={shouldReduceMotion ? {} : { y: -8, scale: 1.02 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                transition={{ duration: 0.25 }}
+                className="h-full"
+              >
+                <Card className="h-full min-h-[280px] bg-neutral-800/50 border-neutral-700 border-dashed hover:border-[#8DC63F]/50 transition-all duration-300 flex items-center justify-center">
+                  <div className="text-center p-6">
+                    <div className="w-16 h-16 bg-[#8DC63F]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <ArrowRight className="h-6 w-6 text-[#8DC63F]" />
+                    </div>
+                    <p className="text-white font-semibold mb-1">Ver más actividades</p>
+                    <p className="text-sm text-neutral-500">Consulta el calendario completo</p>
                   </div>
-                  <p className="text-neutral-400 font-medium">Ver más actividades</p>
-                </div>
-              </Card>
+                </Card>
+              </motion.div>
             </Link>
-          </div>
+          </motion.div>
         </div>
       </div>
 
