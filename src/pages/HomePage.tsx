@@ -1,30 +1,138 @@
-import HeroSection from '@/components/home/HeroSection'
-import ExposicionesPreview from '@/components/home/ExposicionesPreview'
-import PlanificaSection from '@/components/home/PlanificaSection'
-import ActividadesHighlight from '@/components/home/ActividadesHighlight'
-import RentaCTA from '@/components/home/RentaCTA'
-import NewsletterSection from '@/components/home/NewsletterSection'
+import { Link } from 'react-router-dom'
+import { PageLayout } from '@/components/layout'
+import { Button } from '@/components/ui/button'
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero: Full-viewport video background with quote and CTAs */}
-      <HeroSection />
-      
-      {/* Exposiciones: Bento grid preview of exhibition areas */}
-      <ExposicionesPreview />
-      
-      {/* Planifica: Hours, address, and map placeholder */}
-      <PlanificaSection />
-      
-      {/* Actividades: Horizontal scroll of upcoming events */}
-      <ActividadesHighlight />
-      
-      {/* Renta: Full-bleed CTA for venue rental */}
-      <RentaCTA />
-      
-      {/* Newsletter: Email subscription */}
-      <NewsletterSection />
-    </main>
+    <PageLayout>
+      {/* Hero Section */}
+      <section className="relative flex min-h-[80vh] flex-col items-center justify-center bg-gradient-to-b from-background to-muted px-4 text-center">
+        <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+          El conocimiento no te crea ni te destruye.{' '}
+          <span className="text-primary">Te transforma.</span>
+        </h1>
+        <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
+          Museo Nacional de Energía y Tecnología — El primer museo nacional de
+          México dedicado a la energía y tecnología.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <Button asChild size="lg">
+            <Link to="/boletos">Comprar Boletos</Link>
+          </Button>
+          <Button asChild variant="outline" size="lg">
+            <Link to="/exposiciones">Explorar Exposiciones</Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* Exposiciones Preview */}
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <h2 className="text-2xl font-bold sm:text-3xl">
+          Explora el Universo de la Energía
+        </h2>
+        <p className="mt-2 text-muted-foreground">
+          Descubre nuestras exposiciones interactivas sobre energía y tecnología.
+        </p>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Placeholder cards - will be replaced with actual exhibition data */}
+          {['Energía Solar', 'Energía Eólica', 'Electricidad'].map((title) => (
+            <div
+              key={title}
+              className="rounded-lg border border-border bg-card p-6 transition-shadow hover:shadow-md"
+            >
+              <div className="mb-4 h-32 rounded-md bg-muted" />
+              <h3 className="font-semibold">{title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Explora los conceptos fundamentales de {title.toLowerCase()}.
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-8 text-center">
+          <Button asChild variant="outline">
+            <Link to="/exposiciones">Ver Todas las Exposiciones</Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* Planifica Section */}
+      <section className="border-y border-border bg-muted/30 py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-8 md:grid-cols-2">
+            <div>
+              <h2 className="text-2xl font-bold sm:text-3xl">
+                Planifica tu Visita
+              </h2>
+              <div className="mt-6 space-y-4">
+                <div>
+                  <h3 className="font-semibold">Horario</h3>
+                  <p className="text-muted-foreground">
+                    Martes a Domingo: 10:00 - 18:00 hrs
+                  </p>
+                  <p className="text-muted-foreground">Lunes: Cerrado</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold">Ubicación</h3>
+                  <p className="text-muted-foreground">
+                    Av. de los Compositores s/n, Bosque de Chapultepec II Secc.
+                  </p>
+                </div>
+              </div>
+              <Button asChild className="mt-6">
+                <Link to="/planifica-tu-visita">Ver Horarios Completos</Link>
+              </Button>
+            </div>
+            <div className="h-64 rounded-lg bg-muted">
+              {/* Map placeholder */}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Actividades Highlight */}
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <h2 className="text-2xl font-bold sm:text-3xl">Próximas Actividades</h2>
+        <p className="mt-2 text-muted-foreground">
+          Talleres, conferencias y eventos especiales.
+        </p>
+        <div className="mt-8 flex gap-4 overflow-x-auto pb-4">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="min-w-[280px] flex-shrink-0 rounded-lg border border-border bg-card p-4"
+            >
+              <div className="mb-3 h-24 rounded-md bg-muted" />
+              <p className="text-sm text-muted-foreground">Próximamente</p>
+              <h3 className="font-semibold">Actividad {i}</h3>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 text-center">
+          <Button asChild variant="outline">
+            <Link to="/actividades">Ver Todas las Actividades</Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* Renta CTA */}
+      <section className="relative bg-primary py-20 text-primary-foreground">
+        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold sm:text-3xl">
+            Haz de tu Evento algo Extraordinario
+          </h2>
+          <p className="mt-4 text-primary-foreground/80">
+            Renta nuestros espacios para tu próximo evento corporativo o social.
+          </p>
+          <Button
+            asChild
+            variant="secondary"
+            size="lg"
+            className="mt-8"
+          >
+            <Link to="/renta-de-espacios">Conoce Nuestros Espacios</Link>
+          </Button>
+        </div>
+      </section>
+    </PageLayout>
   )
 }
