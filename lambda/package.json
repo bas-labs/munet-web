@@ -1,0 +1,21 @@
+{
+  "name": "munet-lambda",
+  "version": "1.0.0",
+  "description": "AWS Lambda functions for MUNET web platform",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.600.0",
+    "@aws-sdk/lib-dynamodb": "^3.600.0",
+    "@aws-sdk/client-ses": "^3.600.0",
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.140",
+    "@types/node": "^20.14.0",
+    "@types/qrcode": "^1.5.5",
+    "typescript": "^5.4.5"
+  }
+}
