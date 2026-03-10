@@ -6,6 +6,7 @@ import {
   PlanificaPage,
   BoletosPage,
   ActividadesPage,
+  EventDetailPage,
   ServiciosPage,
   FotogaleriaPage,
   RentaEspaciosPage,
@@ -30,6 +31,7 @@ function App() {
         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
         <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
         <Route path="/actividades" element={<ActividadesPage />} />
+        <Route path="/actividades/:eventId" element={<EventDetailPage />} />
         <Route path="/servicios" element={<ServiciosPage />} />
         <Route path="/fotogaleria" element={<FotogaleriaPage />} />
         <Route path="/renta-de-espacios" element={<RentaEspaciosPage />} />
