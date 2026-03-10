@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { PageLoadingFallback } from '@/components/ui/loading-spinner'
+import { ToastProvider } from '@/components/ui/toast'
 
 // =============================================================================
 // LAZY LOADED PAGES - Code Splitting per Route
@@ -108,9 +109,11 @@ function AnimatedRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <Suspense fallback={<PageLoadingFallback />}>
-        <AnimatedRoutes />
-      </Suspense>
+      <ToastProvider>
+        <Suspense fallback={<PageLoadingFallback />}>
+          <AnimatedRoutes />
+        </Suspense>
+      </ToastProvider>
     </BrowserRouter>
   )
 }

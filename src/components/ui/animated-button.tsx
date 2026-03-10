@@ -51,9 +51,7 @@ const buttonVariants = cva(
   }
 )
 
-export interface AnimatedButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+export interface AnimatedButtonProps extends VariantProps<typeof buttonVariants> {
   asChild?: boolean
   /** Show loading spinner */
   loading?: boolean
@@ -61,6 +59,22 @@ export interface AnimatedButtonProps
   loadingText?: string
   /** Disable hover/tap animations */
   noAnimation?: boolean
+  /** Button content */
+  children?: React.ReactNode
+  /** Additional class names */
+  className?: string
+  /** Disabled state */
+  disabled?: boolean
+  /** Button type */
+  type?: 'button' | 'submit' | 'reset'
+  /** Click handler */
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  /** Form attribute */
+  form?: string
+  /** Aria label */
+  'aria-label'?: string
+  /** Aria describedby */
+  'aria-describedby'?: string
 }
 
 const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButtonProps>(
@@ -75,6 +89,8 @@ const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButtonProps>(
       noAnimation = false,
       children,
       disabled,
+      type = 'button',
+      onClick,
       ...props
     },
     ref
@@ -95,15 +111,24 @@ const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButtonProps>(
       )
     }
 
+    // Extract aria props
+    const ariaLabel = props['aria-label']
+    const ariaDescribedby = props['aria-describedby']
+    const formAttr = props.form
+
     return (
       <motion.button
         ref={ref}
+        type={type}
         className={cn(buttonVariants({ variant, size, className }))}
         disabled={disabled || loading}
+        onClick={onClick}
         whileHover={shouldAnimate ? { scale: 1.02 } : undefined}
         whileTap={shouldAnimate ? { scale: 0.98 } : undefined}
         transition={{ duration: 0.15, ease: 'easeOut' }}
-        {...props}
+        aria-label={ariaLabel}
+        aria-describedby={ariaDescribedby}
+        form={formAttr}
       >
         {loading ? (
           <>
