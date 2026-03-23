@@ -1,195 +1,221 @@
-# MUNET Web — Scope del Proyecto
+# MUNET Web — Alcance de la Plataforma
 
 > **Museo Nacional de Energía y Tecnología**  
 > Web/App responsiva con módulos funcionales
 
 ---
 
-## 📋 Resumen Ejecutivo
+## 📋 Entregables Principales
 
-Creación y configuración de webapp responsiva para el Museo Nacional de Energía y Tecnología (MUNET), incluyendo módulos de información, venta de boletos, renta de espacios, y dashboard operativo.
+### 🌐 Sitio Web MUNET
 
----
+**13 páginas:**
+- Inicio, Exposiciones, Boletos, Planifica tu Visita
+- Actividades, Quiénes Somos, Servicios, Fotogalería
+- Renta de Espacios, Involúcrate, Contacto, Blog, Privacidad
 
-## 🏗️ Stack Tecnológico
+**Stack técnico:**
+- React + Vite + TypeScript + TailwindCSS + shadcn/ui
+- Framer Motion: scroll reveals, transiciones, micro-interacciones
+- SEO: meta tags, Open Graph, JSON-LD, sitemap.xml, robots.txt
+- Mobile-first responsive · WCAG 2.1 AA
 
-| Capa | Tecnología |
-|------|------------|
-| **Frontend** | React 19 + TypeScript 5.9 + Vite 7 |
-| **Styling** | Tailwind CSS 4 + Shadcn/ui |
-| **Animaciones** | Framer Motion + GSAP + Lenis |
-| **Backend** | AWS Lambda (Node.js) |
-| **Base de datos** | AWS DynamoDB |
-| **Pagos** | Stripe (checkout, webhooks) |
-| **Email** | AWS SES |
-| **Hosting** | AWS Amplify + CloudFront |
-| **Dominio** | munet.mx |
+**Estado:** ✅ 12/13 páginas implementadas | 🔄 Blog pendiente
 
 ---
 
-## 📦 Módulos — Estado Actual
+### 🎟️ Sistema de Boletaje
+
+**8 tipos de boleto:**
+
+| Tipo | Precio |
+|------|--------|
+| Nacional | $100 |
+| Extranjero | $200 |
+| Estudiante | $50 |
+| Docente | $50 |
+| INAPAM | Gratis |
+| Niño 0-5 años | Gratis |
+| Niño 6-12 años | $50 |
+| Grupo (≥20) | $40/alumno |
+
+**Funcionalidades:**
+- Motor de reglas DynamoDB: domingos gratis, festivos, grupos ≥20, eventos especiales
+- Selector de fecha (30 días) + capacidad en tiempo real
+- Cálculo server-side: API Gateway + Lambda
+- QR único por orden + email con PDF (SES)
+
+**Estado:** ✅ Implementado con Stripe | 🔄 Migrar a OpenPay
+
+---
+
+### 💳 Pagos — OpenPay
+
+**Métodos de pago:**
+- Tarjeta crédito/débito (Visa, MC, AMEX)
+- OXXO Pay (referencia, vence 72 hrs)
+
+**Integraciones:**
+- Webhooks: confirmación, fallo, reembolso
+- Reconciliación automática vs MUNET_Orders
+- Sandbox → Producción
+- Fallback: eticket.mx
+
+**Estado:** 🔄 Actualmente en Stripe, migrar a OpenPay
+
+---
+
+## 🔧 Plataforma Técnica
+
+### 🎫 Emisión y Control de Acceso
+
+- PDF + QR generado en Lambda, adjunto vía SES
+- QR: `orderId + visitDate + hash de validación`
+- Escaneo tótem/taquilla con validación server-side
+- Prevención duplicados: estado `USED` en DynamoDB
+- Reservación domingos gratis (mismo flujo, sin cobro)
+
+**Estado:** 🔄 Pendiente implementar
+
+---
+
+### 📊 Panel Operativo (Dashboard)
+
+**Módulos:**
+- Ventas tiempo real: órdenes, ingresos, ticket promedio
+- Ocupación por día + proyección de capacidad
+- Gestión contenido: precios, horarios, eventos, festivos
+- Reportes CSV / PDF exportables
+- Alertas: capacidad 80%, errores pago, SES bounces
+
+**Estado:** 🔄 Pendiente implementar
+
+---
+
+### ☁️ Infraestructura AWS
+
+| Servicio | Configuración |
+|----------|---------------|
+| **Amplify Hosting** | + CloudFront CDN (museomunet.com) |
+| **API Gateway REST** | → 10 Lambdas (Node.js 20, ESM) |
+| **DynamoDB** | 6 tablas: Orders, TicketConfig, Events, Inquiries, Applications, Newsletter |
+| **SES** | 6 templates transaccionales |
+| **S3** | Assets + backups |
+| **Secrets Manager** | API keys, tokens |
+| **X-Ray** | Tracing |
+| **CloudWatch** | Logs + Alarms |
+
+**Estado:** ✅ Parcialmente implementado (3 Lambdas, 1 tabla)
+
+---
+
+## 📦 Estado por Módulo
 
 ### ✅ Completados
 
-| Módulo | Ruta | Descripción | Estado |
-|--------|------|-------------|--------|
-| **Home** | `/` | Hero, exposiciones preview, actividades, renta CTA, newsletter | ✅ Live |
-| **Quiénes Somos** | `/quienes-somos` | Historia de MUNET, misión, visión, timeline | ✅ Live |
-| **Exposiciones** | `/exposiciones` | Catálogo de exposiciones permanentes y temporales | ✅ Live |
-| **Actividades** | `/actividades` | Calendario de eventos, talleres, visitas guiadas | ✅ Live |
-| **Detalle Evento** | `/actividades/:id` | Página individual de evento con registro | ✅ Live |
-| **Planifica tu Visita** | `/planifica-tu-visita` | Ubicación, horarios, estacionamiento, accesibilidad | ✅ Live |
-| **Servicios** | `/servicios` | Tienda, cafetería, audioguías, accesibilidad | ✅ Live |
-| **Fotogalería** | `/fotogaleria` | Galería masonry con lightbox y filtros por categoría | ✅ Live |
-| **Renta de Espacios** | `/renta-de-espacios` | Catálogo de espacios, capacidades, formulario de cotización | ✅ Live |
-| **Compra de Boletos** | `/boletos` | Selector de fecha/cantidad, integración Stripe | ✅ Live |
-| **Checkout Flow** | `/checkout/*` | Success, cancel, lookup de órdenes | ✅ Live |
-| **Involúcrate** | `/involucrate` | Voluntariado, donaciones, membresías | ✅ Live |
-| **Contacto** | `/contacto` | Formulario de contacto general | ✅ Live |
-| **Aviso de Privacidad** | `/aviso-de-privacidad` | Legal | ✅ Live |
+| Módulo | Ruta | Notas |
+|--------|------|-------|
+| Home | `/` | Hero, exposiciones preview, actividades, renta CTA, newsletter |
+| Quiénes Somos | `/quienes-somos` | Historia, misión, visión, timeline |
+| Exposiciones | `/exposiciones` | Catálogo permanentes y temporales |
+| Actividades | `/actividades` | Calendario, eventos, talleres |
+| Detalle Evento | `/actividades/:id` | Registro individual |
+| Planifica tu Visita | `/planifica-tu-visita` | Ubicación, horarios, estacionamiento |
+| Servicios | `/servicios` | Tienda, cafetería, audioguías |
+| Fotogalería | `/fotogaleria` | Masonry grid, lightbox, filtros |
+| Renta de Espacios | `/renta-de-espacios` | Catálogo, capacidades, formulario |
+| Boletos | `/boletos` | Selector fecha/cantidad, checkout Stripe |
+| Checkout Flow | `/checkout/*` | Success, cancel, lookup |
+| Involúcrate | `/involucrate` | Voluntariado, donaciones, membresías |
+| Contacto | `/contacto` | Formulario general |
+| Aviso de Privacidad | `/aviso-de-privacidad` | Legal |
 
-### 🔄 En Desarrollo / Pendientes
+### 🔄 Pendientes
 
-| Módulo | Ruta | Descripción | Prioridad |
-|--------|------|-------------|-----------|
-| **Mapa Interactivo** | `/mapa` | Mapa del museo por niveles con puntos de interés | 🟡 P1 |
-| **Noticias / Blog** | `/noticias` | Sistema de publicaciones con CMS headless | 🟡 P1 |
-| **Dashboard Operativo** | `/admin/*` | Panel de administración para el museo | 🔴 P2 |
-
----
-
-## 🗺️ Mapa Interactivo — Especificación
-
-**Objetivo:** Navegación visual del museo por niveles con puntos de interés interactivos.
-
-### Funcionalidades
-- Vista de planta por nivel (Nivel 1, Nivel 2, Sótano)
-- Puntos de interés clickeables (exposiciones, servicios, salidas)
-- Tooltip/modal con info de cada punto
-- Filtros por categoría (exposiciones, servicios, accesibilidad)
-- Indicador de "Estás aquí" (futuro: integración con beacons)
-- Responsive: zoom/pan en móvil
-
-### Assets Requeridos
-- SVG de planta arquitectónica por nivel (ya hay `nivel1.png`, `nivel2.png`)
-- Iconografía de puntos de interés
-- Datos de coordenadas de cada punto
-
-### Implementación Técnica
-- React + SVG interactivo (o librería como `react-zoom-pan-pinch`)
-- Data layer en JSON o DynamoDB
-- Componente `InteractiveMap.tsx` con estado de nivel activo
+| Módulo | Ruta | Prioridad | Esfuerzo |
+|--------|------|-----------|----------|
+| Blog / Noticias | `/blog` | P1 | 2-3 semanas |
+| Mapa Interactivo | `/mapa` | P2 | 1-2 semanas |
+| Dashboard Operativo | `/admin/*` | P1 | 4-6 semanas |
+| Migración a OpenPay | — | P0 | 1-2 semanas |
+| QR + Control Acceso | — | P1 | 2 semanas |
+| Dominio museomunet.com | — | P0 | 1-2 días |
 
 ---
 
-## 📰 Noticias / Blog — Especificación
+## 🗃️ Tablas DynamoDB
 
-**Objetivo:** Publicar noticias, comunicados y artículos del museo.
-
-### Funcionalidades
-- Listado de artículos con paginación
-- Página de detalle de artículo
-- Categorías/tags
-- Búsqueda básica
-- SEO optimizado (structured data, meta tags)
-- Compartir en redes sociales
-
-### Backend Options
-1. **DynamoDB + Lambda** — Consistente con stack actual
-2. **CMS Headless** — Sanity, Strapi, o Contentful (más fácil para editores)
-3. **MDX en repo** — Para contenido estático (sin CMS)
-
-### Rutas
-- `/noticias` — Listado
-- `/noticias/:slug` — Detalle
+| Tabla | Descripción | Estado |
+|-------|-------------|--------|
+| `Orders` | Órdenes de boletos | ✅ Existe |
+| `TicketConfig` | Precios, reglas, festivos | 🔄 Pendiente |
+| `Events` | Actividades y eventos | 🔄 Pendiente |
+| `Inquiries` | Solicitudes de renta | ✅ Existe |
+| `Applications` | Voluntariado, membresías | 🔄 Pendiente |
+| `Newsletter` | Suscriptores | 🔄 Pendiente |
 
 ---
 
-## 🎛️ Dashboard Operativo — Especificación
+## 📧 Templates SES (6)
 
-**Objetivo:** Panel de administración para gestión del museo.
+1. `ticket-confirmation` — Confirmación de compra con PDF adjunto
+2. `ticket-reminder` — Recordatorio día anterior
+3. `ticket-cancelled` — Cancelación/reembolso
+4. `inquiry-received` — Confirmación solicitud de renta
+5. `event-registration` — Registro a actividad
+6. `newsletter-welcome` — Bienvenida a newsletter
 
-### Módulos del Dashboard
-
-| Módulo | Funcionalidad |
-|--------|---------------|
-| **Ventas** | Reportes de boletos vendidos, ingresos por día/semana/mes |
-| **Eventos** | CRUD de actividades y eventos |
-| **Espacios** | Ver/gestionar solicitudes de renta |
-| **Contenido** | Editar exposiciones, servicios, noticias |
-| **Usuarios** | Gestión de accesos administrativos |
-| **Analytics** | Integración con GA4, métricas de uso |
-
-### Autenticación
-- AWS Cognito (user pools)
-- Roles: Admin, Editor, Viewer
-
-### Stack Sugerido
-- Ruta: `/admin/*` (lazy loaded, separado del sitio público)
-- UI: Shadcn/ui dashboard components
-- Charts: Recharts o Tremor
-- Tables: TanStack Table
+**Estado:** 🔄 Solo 2 implementados actualmente
 
 ---
 
-## 🌐 Infraestructura
+## 🔐 Lambdas (10 target)
 
-### Dominio y DNS
-- **Dominio:** munet.mx
-- **Configuración:** Route 53 o registrador externo → CloudFront
-
-### Setup de Correos
-- **Transaccionales:** AWS SES (confirmaciones de compra, contacto)
-- **Corporativos:** Google Workspace o Zoho (info@munet.mx, etc.)
-
-### Plataforma AWS
-| Servicio | Uso |
-|----------|-----|
-| **Amplify** | Hosting frontend, CI/CD |
-| **CloudFront** | CDN, SSL |
-| **Lambda** | API serverless (Stripe, forms) |
-| **DynamoDB** | Datos (órdenes, espacios, eventos) |
-| **SES** | Email transaccional |
-| **S3** | Assets estáticos, backups |
-| **Cognito** | Auth para dashboard |
-
-### Monitoreo
-- CloudWatch Logs (Lambda)
-- CloudWatch Alarms (errores, latencia)
-- Amplify deploy notifications
-- UptimeRobot o similar (health checks)
-
-### Actualizaciones
-- Dependabot para seguridad
-- Deploys automáticos en push a `main`
-- Staging branch para QA
+| Lambda | Descripción | Estado |
+|--------|-------------|--------|
+| `createCheckoutSession` | Iniciar pago | ✅ |
+| `handleStripeWebhook` | Procesar webhooks pago | ✅ |
+| `submitInquiry` | Formulario renta | ✅ |
+| `generateTicketPDF` | Generar PDF con QR | 🔄 |
+| `validateTicket` | Validar QR en entrada | 🔄 |
+| `getTicketConfig` | Obtener precios/reglas | 🔄 |
+| `getCapacity` | Disponibilidad por fecha | 🔄 |
+| `registerEvent` | Registro a actividad | 🔄 |
+| `subscribeNewsletter` | Suscripción newsletter | 🔄 |
+| `adminReports` | Reportes dashboard | 🔄 |
 
 ---
 
-## 📅 Roadmap Sugerido
+## 📅 Roadmap
 
-### Fase 1 — Lanzamiento MVP ✅
-- [x] Sitio público completo
-- [x] Sistema de boletos con Stripe
-- [x] Renta de espacios (formulario)
-- [x] Deploy en Amplify
+### Fase 1 — MVP Público ✅
+- [x] 12 páginas públicas
+- [x] Sistema boletos (Stripe)
+- [x] Formulario renta
+- [x] Deploy Amplify
 
-### Fase 2 — Contenido Dinámico (2-3 semanas)
-- [ ] Mapa interactivo
+### Fase 2 — Pagos y Acceso (3-4 semanas)
+- [ ] Migración Stripe → OpenPay
+- [ ] OXXO Pay
+- [ ] Generación PDF con QR
+- [ ] Validación QR server-side
+- [ ] Motor de reglas (domingos, festivos, grupos)
+
+### Fase 3 — Dashboard (4-6 semanas)
+- [ ] Auth Cognito
+- [ ] Dashboard ventas
+- [ ] Gestión de contenido
+- [ ] Reportes exportables
+- [ ] Alertas
+
+### Fase 4 — Contenido (2-3 semanas)
 - [ ] Blog/Noticias con CMS
-- [ ] Dominio munet.mx + correos
+- [ ] Mapa interactivo
 
-### Fase 3 — Dashboard Operativo (4-6 semanas)
-- [ ] Autenticación Cognito
-- [ ] Dashboard de ventas
-- [ ] CRUD de eventos
-- [ ] Gestión de solicitudes de renta
-
-### Fase 4 — Optimización (Ongoing)
-- [ ] Analytics avanzados
-- [ ] PWA / App móvil
-- [ ] Integración con POS físico
-- [ ] Beacons para mapa interactivo
+### Fase 5 — Dominio y Correos
+- [ ] Dominio museomunet.com
+- [ ] Setup correos corporativos
+- [ ] 6 templates SES
 
 ---
 
@@ -198,8 +224,8 @@ Creación y configuración de webapp responsiva para el Museo Nacional de Energ�
 ```
 munet-web/
 ├── src/
-│   ├── pages/           # Páginas (lazy loaded)
-│   ├── components/      # Componentes por feature
+│   ├── pages/           # 13 páginas (lazy loaded)
+│   ├── components/      # Por feature
 │   │   ├── home/
 │   │   ├── tickets/
 │   │   ├── gallery/
@@ -207,53 +233,36 @@ munet-web/
 │   │   ├── activities/
 │   │   ├── about/
 │   │   ├── services/
+│   │   ├── blog/        # 🔄 Pendiente
+│   │   ├── admin/       # 🔄 Pendiente
 │   │   ├── layout/
-│   │   ├── ui/          # Shadcn/ui components
+│   │   ├── ui/
 │   │   └── seo/
-│   ├── lib/             # Utilities, API clients, types
-│   └── data/            # Static data files
-├── lambda/              # AWS Lambda functions
-│   ├── createCheckoutSession.ts
-│   ├── handleStripeWebhook.ts
-│   └── submitInquiry.ts
-├── public/              # Static assets
-└── amplify.yml          # Amplify build config
+│   ├── lib/
+│   └── data/
+├── lambda/              # 10 funciones (3 implementadas)
+├── public/
+└── amplify.yml
 ```
 
 ---
 
-## 🔐 Variables de Entorno
+## ✅ Checklist Entregables
 
-### Frontend (`.env`)
-```
-VITE_STRIPE_PUBLISHABLE_KEY=pk_live_...
-VITE_API_URL=https://api.munet.mx
-VITE_GA_MEASUREMENT_ID=G-XXXXXXX
-```
-
-### Lambda
-```
-STRIPE_SECRET_KEY=sk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-SES_FROM_EMAIL=boletos@munet.mx
-DYNAMODB_TABLE_ORDERS=munet-orders
-```
-
----
-
-## ✅ Entregables Incluidos
-
-1. ✅ Webapp responsiva con todos los módulos públicos
-2. ✅ Sistema de venta de boletos (Stripe)
-3. ✅ Sistema de renta de espacios (formulario + notificaciones)
-4. ✅ Backend serverless (Lambda + DynamoDB + SES)
-5. ✅ Hosting en AWS Amplify + CloudFront
-6. 🔄 Dominio munet.mx y setup de correos
-7. 🔄 Mapa interactivo del museo
-8. 🔄 Sistema de noticias/blog
-9. 🔄 Dashboard operativo
-10. ✅ Monitoreo básico (CloudWatch)
-11. 🔄 Documentación de operación
+- [x] Webapp responsiva (12/13 páginas)
+- [x] Sistema de venta de boletos (Stripe)
+- [ ] Sistema de venta de boletos (OpenPay + OXXO)
+- [x] Formulario renta de espacios
+- [ ] Emisión QR + control de acceso
+- [ ] Dashboard operativo
+- [ ] Blog/Noticias
+- [ ] Mapa interactivo
+- [x] Backend serverless (Lambda + DynamoDB)
+- [ ] 6 tablas DynamoDB
+- [ ] 6 templates SES
+- [ ] Dominio museomunet.com + correos
+- [x] Amplify + CloudFront
+- [ ] Monitoreo completo (X-Ray + CloudWatch)
 
 ---
 
